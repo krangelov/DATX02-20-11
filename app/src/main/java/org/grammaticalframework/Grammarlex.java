@@ -15,7 +15,7 @@ import org.grammaticalframework.pgf.PGF;
 
 
 public class Grammarlex extends Application {
-    private static String TAG = "SmartLearning";
+    private static String TAG = "Grammarlex";
 
     private GrammarLoader grammarLoader;
     private ConcrLoader sourceLoader;

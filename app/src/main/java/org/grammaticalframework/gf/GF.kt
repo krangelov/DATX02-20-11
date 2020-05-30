@@ -19,11 +19,11 @@ Expr: A syntax tree
 
 Concr: The grammar of a language
   Created by: Gotten from a PGF-file
-    or, in our case, the SmartLearning object
+    or, in our case, the Grammarlex object
 
 PGF: A set of grammars
   Created by: PGF.readPGF(Filepath)
-    or, in our case, the SmartLearning object
+    or, in our case, the Grammarlex object
 
 ExprProb: An expression with a probability of correct parsing
   Created via: [concr].parse([pgf].getStartCat(), [concr_string]) gives an Iterable, which via .iterator() gives an Iterator<ExprProb>
