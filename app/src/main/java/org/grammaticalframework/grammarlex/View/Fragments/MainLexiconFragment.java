@@ -1,6 +1,7 @@
 package org.grammaticalframework.grammarlex.View.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -231,6 +232,14 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
         rvLexicon.setAdapter(wordAdapter);
         rvLexicon.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvLexicon.addItemDecoration(new DividerItemDecoration((rvLexicon.getContext()), DividerItemDecoration.VERTICAL));
+
+        if (getArguments() != null) {
+            CharSequence searchString = getArguments().getCharSequence(Intent.EXTRA_PROCESS_TEXT);
+            if (searchString != null) {
+                search_bar.setText(searchString);
+                searchWord(searchString.toString());
+            }
+        }
 
         return fragmentView;
     }

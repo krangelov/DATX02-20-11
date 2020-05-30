@@ -2,6 +2,7 @@ package org.grammaticalframework.grammarlex.View;
 import org.grammaticalframework.grammarlex.R;
 import org.grammaticalframework.grammarlex.ViewModel.MainViewModel;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.navigation.NavController;
@@ -20,13 +21,19 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         this.viewModel = new MainViewModel();
 
-
-
-
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
+
+        CharSequence text = getIntent().getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT);
+        if (text != null) {
+            Bundle bundle = new Bundle();
+            bundle.putCharSequence(Intent.EXTRA_PROCESS_TEXT, text);
+            navController.popBackStack();
+            navController.navigate(R.id.lexiconFragment, bundle);
+        }
     }
+
     public MainViewModel getViewModel() {
         return viewModel;
     }
