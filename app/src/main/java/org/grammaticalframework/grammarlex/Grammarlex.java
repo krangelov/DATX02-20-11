@@ -32,18 +32,18 @@ public class Grammarlex extends Application {
     private SharedPreferences mSharedPref;
 
     private Language[] languages = {
-        new Language("bg-BG", "Bulgarian", "ParseBul"),
-        new Language("ca-ES", "Catalan",   "ParseCat"),
-        new Language("cmn-Hans-CN", "Chinese", "ParseChi"),
-        new Language("nl-NL", "Dutch", "ParseDut"),
-        new Language("en-US", "English", "ParseEng"),
-        new Language("et-EE", "Estonian","ParseEst"),
-        new Language("fi-FI", "Finnish", "ParseFin"),
-        new Language("it-IT", "Italian", "ParseIta"),
-        new Language("es-ES", "Spanish", "ParseSpa"),
-        new Language("sv-SE", "Swedish", "ParseSwe"),
-        new Language("pt-PT", "Portuguese", "ParsePor"),
-        new Language("th-TH", "Thai",    "ParseTha"),
+        new Language("bg-BG", "Bulgarian", "ParseBul", R.xml.cyrillic),
+        new Language("ca-ES", "Catalan",   "ParseCat", R.xml.qwerty),
+        new Language("cmn-Hans-CN", "Chinese", "ParseChi", R.xml.qwerty),
+        new Language("nl-NL", "Dutch", "ParseDut", R.xml.qwerty),
+        new Language("en-US", "English", "ParseEng", R.xml.qwerty),
+        new Language("et-EE", "Estonian","ParseEst", R.xml.nordic),
+        new Language("fi-FI", "Finnish", "ParseFin", R.xml.nordic),
+        new Language("it-IT", "Italian", "ParseIta", R.xml.qwerty),
+        new Language("es-ES", "Spanish", "ParseSpa", R.xml.qwerty),
+        new Language("sv-SE", "Swedish", "ParseSwe", R.xml.nordic),
+        new Language("pt-PT", "Portuguese", "ParsePor", R.xml.qwerty),
+        new Language("th-TH", "Thai",    "ParseTha", R.xml.qwerty),
     };
 
     public void onCreate() {

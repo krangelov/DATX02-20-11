@@ -31,4 +31,9 @@
     <color name="brown">#AB260B</color>
     <color name="button_grey">#d6d7d7</color>
     <!--<color name="grey">#D3D3D3</color>-->
+
+    <color name="candidate_normal">#FF000000</color>
+    <color name="candidate_recommended">#FFE35900</color>
+    <color name="candidate_other">#ff808080</color>
+    <color name="candidate_background">#ffffffff</color>
 </resources>
