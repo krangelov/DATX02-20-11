@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/synonymExerciseFragment"
-        android:name="org.grammaticalframework.View.Fragments.SynonymExerciseFragment"
+        android:name="org.grammaticalframework.grammarlex.View.Fragments.SynonymExerciseFragment"
         android:label="synonymExerciseFragment">
         <action
             android:id="@+id/action_synonymExerciseFragment_self"
@@ -15,12 +15,12 @@
     </fragment>
     <fragment
         android:id="@+id/vocabularyFragment"
-        android:name="org.grammaticalframework.View.Fragments.VocabularyFragment"
+        android:name="org.grammaticalframework.grammarlex.View.Fragments.VocabularyFragment"
         android:label="VocabularyFragment"
         tools:layout="@layout/fragment_vocabulary" />
     <fragment
         android:id="@+id/grammarFragment"
-        android:name="org.grammaticalframework.View.Fragments.GrammarFragment"
+        android:name="org.grammaticalframework.grammarlex.View.Fragments.GrammarFragment"
         android:label="GrammarFragment"
         tools:layout="@layout/fragment_grammar" />
     <action
@@ -28,7 +28,7 @@
         app:destination="@+id/fillTheGapFragment" />
     <fragment
         android:id="@+id/fillTheGapFragment"
-        android:name="org.grammaticalframework.View.Fragments.FillTheGapFragment"
+        android:name="org.grammaticalframework.grammarlex.View.Fragments.FillTheGapFragment"
         android:label="fillTheGapFragment"
         tools:layout="@layout/fragment_exercise_fill_the_gap">
         <action
@@ -37,7 +37,7 @@
     </fragment>
     <fragment
         android:id="@+id/mainExerciseFragment"
-        android:name="org.grammaticalframework.View.Fragments.MainExerciseFragment"
+        android:name="org.grammaticalframework.grammarlex.View.Fragments.MainExerciseFragment"
         android:label="fragment_exercise"
         tools:layout="@layout/fragment_exercise">
         <action
@@ -49,12 +49,12 @@
     </fragment>
     <fragment
         android:id="@+id/mainHomeFragment"
-        android:name="org.grammaticalframework.View.Fragments.MainHomeFragment"
+        android:name="org.grammaticalframework.grammarlex.View.Fragments.MainHomeFragment"
         android:label="fragment_main_home"
         tools:layout="@layout/fragment_main_home" />
     <fragment
         android:id="@+id/lexiconFragment"
-        android:name="org.grammaticalframework.View.Fragments.MainLexiconFragment"
+        android:name="org.grammaticalframework.grammarlex.View.Fragments.MainLexiconFragment"
         android:label="fragment_lexicon"
         tools:layout="@layout/fragment_lexicon">
         <action
@@ -63,13 +63,13 @@
     </fragment>
     <fragment
         android:id="@+id/lexiconDetailsFragment"
-        android:name="org.grammaticalframework.View.Fragments.LexiconDetailsFragment"
+        android:name="org.grammaticalframework.grammarlex.View.Fragments.LexiconDetailsFragment"
         android:label="fragment_lexicon_details"
         tools:layout="@layout/fragment_lexicon_details">
         <argument
             android:id="@+id/first_message"
             android:name="message"
-            app:argType="org.grammaticalframework.ViewModel.LexiconWord" />
+            app:argType="org.grammaticalframework.grammarlex.ViewModel.LexiconWord" />
         <action
             android:id="@+id/action_lexiconDetailsFragment_to_lexiconFragment"
             app:destination="@id/lexiconFragment" />
@@ -84,7 +84,7 @@
         app:destination="@id/synonymExerciseFragment" />
     <fragment
         android:id="@+id/translateExerciseFragment"
-        android:name="org.grammaticalframework.View.Fragments.TranslateExerciseFragment"
+        android:name="org.grammaticalframework.grammarlex.View.Fragments.TranslateExerciseFragment"
         android:label="TranslateExerciseFragment">
         <action
             android:id="@+id/action_translateExerciseFragment_self"
