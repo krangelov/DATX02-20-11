@@ -53,6 +53,12 @@
         android:label="fragment_main_home"
         tools:layout="@layout/fragment_main_home" />
     <fragment
+        android:id="@+id/phrasebookFragment"
+        android:name="org.grammaticalframework.grammarlex.View.Fragments.PhraseListFragment"
+        android:label="fragment_phrasebook"
+        tools:layout="@layout/fragment_phrase_list">
+    </fragment>
+    <fragment
         android:id="@+id/lexiconFragment"
         android:name="org.grammaticalframework.grammarlex.View.Fragments.MainLexiconFragment"
         android:label="fragment_lexicon"

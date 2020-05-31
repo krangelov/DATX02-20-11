@@ -31,6 +31,8 @@ public class Grammarlex extends Application {
 
     private SharedPreferences mSharedPref;
 
+    private static Grammarlex instance;
+
     private Language[] languages = {
         new Language("bg-BG", "Bulgarian", "ParseBul", R.xml.cyrillic),
         new Language("ca-ES", "Catalan",   "ParseCat", R.xml.qwerty),
@@ -72,6 +74,8 @@ public class Grammarlex extends Application {
         }
 
         otherLoader = null;
+
+        instance = this;
     }
 
     public PGF getPgf() {
@@ -328,5 +332,9 @@ public class Grammarlex extends Application {
                 }
             }
         }
+    }
+
+    public static Grammarlex get() {
+        return instance;
     }
 }

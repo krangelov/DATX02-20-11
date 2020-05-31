@@ -14,6 +14,11 @@
         android:title="Exercises"
         android:menuCategory="secondary"/>
     <item
+        android:id="@+id/phrasebookFragment"
+        android:icon="@drawable/ic_phrasebook"
+        android:title="Phrasebook"
+        android:menuCategory="secondary"/>
+    <item
         android:id="@+id/lexiconFragment"
         android:icon="@drawable/ic_library_books_black_24dp"
         android:title="Lexicon"
