@@ -145,7 +145,7 @@ public class LexiconDetailsFragment extends BaseFragment {
             for (WNExplanation synonym : wnSynonyms){
                 if(!synonym.getSynonym().equals("random_siffra")){
                     if (!lexiconWord.getSynonymCode().equals("random_siffra") && lexiconWord.getExplanation().equals(synonym.getExplanation())
-                            && !foundSynonymList.contains(synonym.getFunction()) && !(lexiconWord.getFunction().equals(synonym.getFunction()))){
+                            && !foundSynonymList.contains(synonym.getFunction()) && !(lexiconWord.getLemma().equals(synonym.getFunction()))){
                         foundSynonymList.add(synonym.getFunction());
                         //lexiconWord.setSynonymWords(constructSynonymWordsString(synonym.getFunction(), synonymSB));
                         String func = synonym.getFunction();

@@ -1,6 +1,12 @@
 package org.grammaticalframework.grammarlex.ViewModel;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,15 +58,25 @@ public class LexiconWordAdapter extends RecyclerView.Adapter<LexiconWordAdapter.
         viewHolder.itemView.setOnClickListener((v) -> {
             navController.navigate(action);
         });
-        //viewHolder.wordTextView.setText(lexiconWord.getWord());
-        viewHolder.wordTextView.setText(lexiconWord.getWord());
-        viewHolder.explanationTextView.setText(lexiconWord.getExplanation());
-        viewHolder.tagTextView.setText(lexiconWord.getTag());
-        if(lexiconWord.getStatus() != null && lexiconWord.getStatus().equals("checked")){
-            viewHolder.functionChecked.setText("✔️");
-        } else {
-            viewHolder.functionChecked.setText("❓");
+
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        builder.append(lexiconWord.getTag());
+        builder.append(". ");
+        builder.append(lexiconWord.getWord());
+        builder.setSpan(
+                new StyleSpan(Typeface.BOLD),
+                0, builder.length(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        builder.append(" ");
+        if (lexiconWord.getStatus() == null || !lexiconWord.getStatus().equals("checked")) {
+            builder.append("(?) ");
+            builder.setSpan(
+                    new ForegroundColorSpan(Color.RED),
+                    builder.length()-4, builder.length()-1,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
+        builder.append(lexiconWord.getExplanation());
+        viewHolder.wordTextView.setText(builder);
     }
 
     @Override
@@ -76,17 +92,11 @@ public class LexiconWordAdapter extends RecyclerView.Adapter<LexiconWordAdapter.
     public class WordItemViewHolder extends RecyclerView.ViewHolder {
 
         public TextView wordTextView;
-        public TextView explanationTextView;
-        public TextView tagTextView;
-        public TextView functionChecked;
 
         public WordItemViewHolder(View itemView) {
             super(itemView);
 
-            wordTextView = itemView.findViewById(R.id.lexicon_item_name);
-            explanationTextView = itemView.findViewById(R.id.lexicon_item_explanation);
-            tagTextView = itemView.findViewById(R.id.lexicon_tag);
-            functionChecked = itemView.findViewById(R.id.functionChecked);
+            wordTextView = (TextView) itemView;
         }
     }
 }

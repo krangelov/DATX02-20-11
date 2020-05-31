@@ -256,7 +256,7 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
             for(WNExplanationWithCheck explanation : wnExplanations){
                 for(int i = 0; i < lexiconWordList.size(); i++){
                     LexiconWord lexiconWord = lexiconWordList.get(i);
-                    if(lexiconWord.getFunction().equals(explanation.getWnExplanation().getFunction())){
+                    if(lexiconWord.getLemma().equals(explanation.getWnExplanation().getFunction())){
                         lexiconWord.setExplanation(explanation.getWnExplanation().getExplanation());
                         if(explanation.getCheckedFunction() != null) {
                             lexiconWord.setStatus(explanation.getCheckedFunction().getStatus());
