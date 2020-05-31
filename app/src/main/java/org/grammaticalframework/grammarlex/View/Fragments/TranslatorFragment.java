@@ -43,12 +43,17 @@ public class TranslatorFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        phrase = (SyntaxTree) getArguments().getSerializable("phrase");
+
         model = Model.getInstance();
+
+        String id = getArguments().getString("id");
+        int position = getArguments().getInt("position");
+        List<SyntaxTree> sentences = (id == null) ? model.getSentences() : model.getGroup(id);
+        phrase = sentences.get(position);
+
 //TODO:        mTts        = new TTS(getActivity());
         mContext    = new ChoiceContext();
-        
-        
+
 		mAdapter =
 			new ArrayAdapter<SyntacticChoice>(getActivity(), R.layout.spinner_input_list_item, mContext.getChoices()) {
 				LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);

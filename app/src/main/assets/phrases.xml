@@ -24,29 +24,37 @@
     </sentence>
 
     <sentence desc="What is somebody's name?" id="QWhatName">
-        <function name="PQuestion">
-            <function name="QWhatName">
-                <call desc="Who are we talking about?" ref="Person"/>
+        <function name="PhrUtt NoPConj">
+            <function name="UttQS">
+				<function name="UseQCl (TTAnt TPres ASimul) PPos">
+					<function name="what_name_QCl">
+						<call desc="Who are we talking about?" ref="Person"/>
+					</function>
+				</function>
             </function>
+            <function name="NoVoc"/>
         </function>
     </sentence>
 
     <sentence desc="Somebody's name is..." id="AHasName">
         <call ref="phraseit">
-            <function name="PropAction">
-                <function name="AHasName">
-                    <call ref="Person"/>
-                    <function name="NameNN"/>
-				</function>
+			<function name="have_name_Cl">
+				<call ref="Person"/>
+				<function name="(UsePN john_2_PN)"/>
 			</function>
 		</call>
     </sentence>
 
     <sentence desc="How old is someone?" id="QWhatAge">
-        <function name="PQuestion">
-            <function name="QWhatAge">
-                <call ref="Person"/>
-            </function>
+        <function name="PhrUtt NoPConj">
+			<function name="UttQS">
+				<function name="UseQCl (TTAnt TPres ASimul) PPos">
+					<function name="how_old_QCl">
+						<call ref="Person"/>
+					</function>
+				</function>
+			</function>
+            <function name="NoVoc"/>
         </function>
     </sentence>
 
@@ -65,9 +73,10 @@
 
     <sentence desc="Someone loves someone" id="ALove">
         <call ref="phraseit">
-            <function name="PropAction">
-                <function name="ALove">
-                    <call desc="Who loves someone?" ref="Person"/>
+            <function name="PredVP">
+				<call desc="Who loves someone?" ref="Person"/>
+				<function name="ComplSlash">
+					<function name="SlashV2a love_1_V2"/>
                     <call desc="Who is loved?" ref="Person"/>
                 </function>
             </function>
@@ -450,128 +459,178 @@
     <!-- ___________________________________________________________________________________________ -->
     <!--Option lists -->
     <option desc="Who are we talking about?" id="Person">
-        <function desc="me (male)" name="IMale" />
-        <function desc="me (female)" name="IFemale" />
-        <function desc="you (a male friend)" name="YouFamMale" />
-        <function desc="you (a female friend)" name="YouFamFemale" />
-        <function desc="you (a male stranger)" name="YouPolMale" />
-        <function desc="you (a female stranger)" name="YouPolFemale" />
-        <function desc="he" name="He"/>
-        <function desc="she" name="She"/>
-        <function desc="we (male)" name="WeMale"/>
-        <function desc="we (female)" name="WeFemale"/>
-        <function desc="you (male friends)" name="YouPlurFamMale"/>
-        <function desc="you (female friends)" name="YouPlurFamFemale"/>
-        <function desc="you (male strangers)" name="YouPlurPolMale"/>
-        <function desc="you (female strangers)" name="YouPlurPolFemale"/>
-        <function desc="they (male)" name="TheyMale"/>
-        <function desc="they (female)" name="TheyFemale"/>
-        <function desc="Wife of ..." name="Wife">
-            <call ref="Person"/>
+        <function desc="me (male)" name="UsePron i_Pron" />
+        <function desc="me (female)" name="UsePron iFem_Pron" />
+        <function desc="you (a male friend)" name="UsePron youSg_Pron" />
+        <function desc="you (a female friend)" name="UsePron youSgFem_Pron" />
+        <function desc="you (a male stranger)" name="UsePron youPol_Pron" />
+        <function desc="you (a female stranger)" name="UsePron youPolFem_Pron" />
+        <function desc="he" name="UsePron he_Pron"/>
+        <function desc="she" name="UsePron she_Pron"/>
+        <function desc="we (male)" name="UsePron we_Pron"/>
+        <function desc="we (female)" name="UsePron weFem_Pron"/>
+        <function desc="you (male friends)" name="UsePron youPl_Pron"/>
+        <function desc="you (female friends)" name="UsePron youPlFem_Pron"/>
+<!--        <function desc="you (male strangers)" name="YouPlurPolMale"/>
+        <function desc="you (female strangers)" name="YouPlurPolFemale"/> -->
+        <function desc="they (male)" name="UsePron they_Pron"/>
+        <function desc="they (female)" name="UsePron theyFem_Pron"/>
+        <function desc="Wife of ..." name="DetCN (DetQuant DefArt NumSg)">
+			<function name="PossNP">
+				<function name="(UseN wife_N)"/>
+				<call ref="Person"/>
+			</function>
         </function>
-        <function desc="Husband of ..." name="Husband">
-            <call ref="Person"/>
+        <function desc="Husband of ..." name="DetCN (DetQuant DefArt NumSg)">
+			<function name="PossNP">
+				<function name="(UseN husband_N)"/>
+				<call ref="Person"/>
+			</function>
         </function>
-        <function desc="Daughter of ..." name="Daughter">
-            <call ref="Person"/>
+        <function desc="Daughter of ..." name="DetCN (DetQuant DefArt NumSg)">
+			<function name="PossNP">
+				<function name="(UseN daughter_N)"/>
+				<call ref="Person"/>
+			</function>
         </function>
-        <function desc="Son of ..." name="Son">
-            <call ref="Person"/>
+        <function desc="Son of ..." name="DetCN (DetQuant DefArt NumSg)">
+			<function name="PossNP">
+				<function name="(UseN son_1_N)"/>
+				<call ref="Person"/>
+			</function>
         </function>
-        <function desc="Children of ..." name="Children">
-            <call ref="Person"/>
+        <function desc="Children of ..." name="DetCN (DetQuant DefArt NumPl)">
+			<function name="PossNP">
+				<function name="(UseN child_2_N)"/>
+				<call ref="Person"/>
+			</function>
+        </function>
+        <function desc="Sister of ..." name="DetCN (DetQuant DefArt NumSg)">
+			<function name="PossNP">
+				<function name="(UseN sister_1_N)"/>
+				<call ref="Person"/>
+			</function>
+        </function>
+        <function desc="Brother of ..." name="DetCN (DetQuant DefArt NumSg)">
+			<function name="PossNP">
+				<function name="(UseN brother_1_N)"/>
+				<call ref="Person"/>
+			</function>
         </function>
     </option>
 
-    <option desc="How to phrase it?" id="phraseit">
-        <function desc="As a statement" name="PSentence">
-            <function name="SProp">
-				<boolean desc="Reported Speech">
-					<argument/>
-					<function name="PropAction">
-						<option>
-                            <function desc="As a statement" name="AKnowSentence">
-    					        <call ref="Person"/>
-                                <function name="SProp">
-	    					        <argument/>
-		    			        </function>
-                            </function>
-                            <function desc="As a question" name="AKnowQuestion">
-    						    <call ref="Person"/>
-                                <function name="QProp">
-   		    				        <argument/>
-			    			    </function>
-                            </function>
-                            <function desc="As a negation" name="AKnowSentence">
-   						        <call ref="Person"/>
-                                <function name="SPropNot">
-	    					        <argument/>
-		    			        </function>
-                            </function>
-                        </option>
-                    </function>
-                </boolean>
-            </function>
-        </function>
-        <function desc="As a question" name="PQuestion">
-            <function name="QProp">
-				<boolean desc="Reported Speech">
-					<argument/>
-					<function name="PropAction">
-						<option>
-                            <function desc="As a statement" name="AKnowSentence">
-    					        <call ref="Person"/>
-                                <function name="SProp">
-	    					        <argument/>
-		    			        </function>
-                            </function>
-                            <function desc="As a question" name="AKnowQuestion">
-    						    <call ref="Person"/>
-                                <function name="QProp">
-   		    				        <argument/>
-			    			    </function>
-                            </function>
-                            <function desc="As a negation" name="AKnowSentence">
-   						        <call ref="Person"/>
-                                <function name="SPropNot">
-	    					        <argument/>
-		    			        </function>
-                            </function>
-                        </option>
-                    </function>
-                </boolean>
-            </function>
-        </function>
-        <function desc="As a negation" name="PSentence">
-            <function name="SPropNot">
-				<boolean desc="Reported Speech">
-					<argument/>
-					<function name="PropAction">
-						<option>
-                            <function desc="As a statement" name="AKnowSentence">
-    					        <call ref="Person"/>
-                                <function name="SProp">
-	    					        <argument/>
-		    			        </function>
-                            </function>
-                            <function desc="As a question" name="AKnowQuestion">
-    						    <call ref="Person"/>
-                                <function name="QProp">
-   		    				        <argument/>
-			    			    </function>
-                            </function>
-                            <function desc="As a negation" name="AKnowSentence">
-   						        <call ref="Person"/>
-                                <function name="SPropNot">
-	    					        <argument/>
-		    			        </function>
-                            </function>
-                        </option>
-                    </function>
-                </boolean>
-            </function>
-        </function>
-    </option>
+    <function id="phraseit" name="PhrUtt NoPConj">
+		<option desc="How to phrase it?">
+			<function desc="As a statement" name="UttS">
+				<function name="UseCl (TTAnt TPres ASimul) PPos">
+					<boolean desc="Use reported speech">
+						<argument/>
+						<option desc="How to phrase it?">
+							<function desc="As a statement" name="PredVP">
+								<call ref="Person"/>
+								<function name="ComplVS know_1_VS">
+									<function name="UseCl (TTAnt TPres ASimul) PPos">
+										<argument/>
+									</function>
+								</function>
+							</function>
+							<function desc="As a question" name="PredVP">
+								<call ref="Person"/>
+								<function name="ComplVQ know_1_VQ">
+									<function name="UseQCl (TTAnt TPres ASimul) PPos">
+										<function name="QuestCl">
+											<argument/>
+										</function>
+									</function>
+								</function>
+							</function>
+							<function  desc="As a negation" name="PredVP">
+								<call ref="Person"/>
+								<function name="ComplVS know_1_VS">
+									<function name="UseCl (TTAnt TPres ASimul) PNeg">
+										<argument/>
+									</function>
+								</function>
+							</function>
+						</option>
+					</boolean>
+				</function>
+			</function>
+			<function desc="As a question" name="UttQS">
+				<function name="UseQCl (TTAnt TPres ASimul) PPos">
+					<function name="QuestCl">
+						<boolean desc="Reported Speech">
+							<argument/>
+							<option desc="How to phrase it?">
+								<function desc="As a statement" name="PredVP">
+									<call ref="Person"/>
+									<function name="ComplVS know_1_VS">
+										<function name="UseCl (TTAnt TPres ASimul) PPos">
+											<argument/>
+										</function>
+									</function>
+								</function>
+								<function desc="As a question" name="PredVP">
+									<call ref="Person"/>
+									<function name="ComplVQ know_1_VQ">
+										<function name="UseQCl (TTAnt TPres ASimul) PPos">
+											<function name="QuestCl">
+												<argument/>
+											</function>
+										</function>
+									</function>
+								</function>
+								<function  desc="As a negation" name="PredVP">
+									<call ref="Person"/>
+									<function name="ComplVS know_1_VS">
+										<function name="UseCl (TTAnt TPres ASimul) PNeg">
+											<argument/>
+										</function>
+									</function>
+								</function>
+							</option>
+						</boolean>
+					</function>
+				</function>
+			</function>
+			<function desc="As a negation" name="UttS">
+				<function name="UseCl (TTAnt TPres ASimul) PNeg">
+					<boolean desc="Reported Speech">
+						<argument/>
+						<option desc="How to phrase it?">
+							<function desc="As a statement" name="PredVP">
+								<call ref="Person"/>
+								<function name="ComplVS know_1_VS">
+									<function name="UseCl (TTAnt TPres ASimul) PPos">
+										<argument/>
+									</function>
+								</function>
+							</function>
+							<function desc="As a question" name="PredVP">
+								<call ref="Person"/>
+								<function name="ComplVQ know_1_VQ">
+									<function name="UseQCl (TTAnt TPres ASimul) PPos">
+										<function name="QuestCl">
+											<argument/>
+										</function>
+									</function>
+								</function>
+							</function>
+							<function  desc="As a negation" name="PredVP">
+								<call ref="Person"/>
+								<function name="ComplVS know_1_VS">
+									<function name="UseCl (TTAnt TPres ASimul) PNeg">
+										<argument/>
+									</function>
+								</function>
+							</function>
+						</option>
+					</boolean>
+				</function>
+			</function>
+		</option>
+		<function name="NoVoc"/>
+	</function>
 
     <option id="language" desc="What language?">
         <function desc="Bulgarian" name="(LangNat Bulgarian)"/>
@@ -966,7 +1025,7 @@
 		<function desc="Thanks" name="GThanks"/>
 	</option>
 
-	<option dec="Phrase" id="Phrase">
+	<option desc="Phrase" id="Phrase">
 		<function desc="Yes" name="PYes"/>
 		<function desc="Yes (as an answer to no)" name="PYesToNo"/>
 		<function desc="No" name="PNo"/>

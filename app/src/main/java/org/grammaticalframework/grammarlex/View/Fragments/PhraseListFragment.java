@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import java.util.ArrayList;
 
@@ -75,7 +76,10 @@ public class PhraseListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long item_id) {
                 SyntaxTree phrase = sentences.get(position);
-               //TODO: ((NavigationActivity) getActivity()).setToTranslationFragment(phrase);
+                Bundle bundle = new Bundle();
+                bundle.putInt("position", position);
+                bundle.putString("id", id);
+                NavHostFragment.findNavController(PhraseListFragment.this).navigate(R.id.action_phrasebookFragment_to_translatorFragment, bundle);
             }
         });
 

@@ -57,6 +57,15 @@
         android:name="org.grammaticalframework.grammarlex.View.Fragments.PhraseListFragment"
         android:label="fragment_phrasebook"
         tools:layout="@layout/fragment_phrase_list">
+        <action
+            android:id="@+id/action_phrasebookFragment_to_translatorFragment"
+            app:destination="@id/translatorFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/translatorFragment"
+        android:name="org.grammaticalframework.grammarlex.View.Fragments.TranslatorFragment"
+        android:label="fragment_translator"
+        tools:layout="@layout/fragment_translator">
     </fragment>
     <fragment
         android:id="@+id/lexiconFragment"
