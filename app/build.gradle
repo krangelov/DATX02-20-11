@@ -7,7 +7,7 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
-        applicationId "org.grammaticalframework"
+        applicationId "org.grammaticalframework.grammarlex"
         minSdkVersion 16
         targetSdkVersion 29
         versionCode 1
