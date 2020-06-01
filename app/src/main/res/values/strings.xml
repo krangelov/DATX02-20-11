@@ -14,4 +14,6 @@
     <!-- Labels for subtype -->
     <string name="normalKeyboardMode">normalKeyboardMode</string>
     <string name="internalKeyboardMode">internalKeyboardMode</string>
+
+    <string name="no_word_matches">No matching word</string>
 </resources>

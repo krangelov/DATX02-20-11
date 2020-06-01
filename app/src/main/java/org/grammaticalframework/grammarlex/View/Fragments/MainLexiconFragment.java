@@ -53,6 +53,7 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
     private LexiconViewModel lexiconVM;
     private final BaseFragment lexiconDetailsFragment = FragmentFactory.createLexiconDetailsFragment();
     private EditText search_bar;
+    private TextView search_word;
     private AppBarLayout lexicon_toolbar;
     private Spinner fromLanguageSpinner;
     private Spinner toLanguageSpinner;
@@ -62,7 +63,6 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
     private TextView from_lang_short;
     private TextView to_lang_short;
     private ImageView dropDown_icon;
-    private String searchString;
     private RecyclerView rvLexicon;
     private LexiconWordAdapter wordAdapter;
 
@@ -90,6 +90,7 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
         View fragmentView = inflater.inflate(R.layout.fragment_lexicon, container, false);
 
         search_bar = fragmentView.findViewById(R.id.lexicon_searchbar);
+        search_word = fragmentView.findViewById(R.id.lexicon_searchword);
         fromLanguageSpinner = fragmentView.findViewById(R.id.lexicon_from_language);
         toLanguageSpinner = fragmentView.findViewById(R.id.lexicon_to_language);
         lexicon_toolbar = fragmentView.findViewById(R.id.lexicon_appbar);
@@ -124,7 +125,6 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
         // Listeners for views
         search_clear_button.setOnClickListener((v) -> {
             search_bar.getText().clear();
-            searchWord(""); // Should reset the recyclerview to initial state
         });
 
         switch_button.setOnClickListener((v) -> {
@@ -164,8 +164,6 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
                     search_bar.clearFocus();
                     hideKeyboard(textView);
                 }
-                searchString = search_bar.getText().toString();
-                searchWord(searchString);
                 return false;
             }
         });
@@ -184,8 +182,15 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
             @Override
             public void afterTextChanged(Editable editable) {
                 if (editable.length() > 0) {
+                    String form = lexiconVM.wordTranslator(editable.toString());
+                    if (form == null)
+                        search_word.setText(R.string.no_word_matches);
+                    else
+                        search_word.setText(form);
                     search_clear_button.setVisibility(View.VISIBLE);
                 } else {
+                    lexiconVM.clear();
+                    search_word.setText("");
                     search_clear_button.setVisibility(View.GONE);
                 }
             }
@@ -237,7 +242,7 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
             CharSequence searchString = getArguments().getCharSequence(Intent.EXTRA_PROCESS_TEXT);
             if (searchString != null) {
                 search_bar.setText(searchString);
-                searchWord(searchString.toString());
+                lexiconVM.wordTranslator(searchString.toString());
             }
         }
 
@@ -302,16 +307,6 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
     private void hideKeyboard(View view){
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
-    private void updateRecycler(String searchString){
-        lexiconVM.wordTranslator(searchString);
-        //TODO: Should this be this way?
-        //wordAdapter.setLexiconWordList(lexiconVM.getLexiconWords());
-    }
-
-    private void clearRecyclerView(){
-        //TODO: Clear livedata?
     }
 
     /*
@@ -399,15 +394,6 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
             return firstLetters.substring(0, 2).toUpperCase();
         else
             return langCode.substring(langCode.length() - 2).toUpperCase();
-    }
-
-    private void searchWord(String searchString) {
-        clearRecyclerView();
-        //wordAdapter.notifyItemRangeRemoved(0,listSize);
-        if (!searchString.isEmpty()) {
-            updateRecycler(searchString);
-            //wordAdapter.notifyDataSetChanged();
-        }
     }
 
     private void switchLanguages() {

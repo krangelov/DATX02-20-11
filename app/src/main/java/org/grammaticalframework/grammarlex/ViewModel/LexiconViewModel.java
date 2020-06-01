@@ -10,6 +10,7 @@ import org.grammaticalframework.grammarlex.Grammarlex;
 import org.grammaticalframework.grammarlex.gf.GF;
 import org.grammaticalframework.pgf.Concr;
 import org.grammaticalframework.pgf.Expr;
+import org.grammaticalframework.pgf.FullFormEntry;
 import org.grammaticalframework.pgf.MorphoAnalysis;
 
 import java.util.ArrayList;
@@ -69,25 +70,37 @@ public class LexiconViewModel extends AndroidViewModel {
 
     }
 
-    public void wordTranslator(String word) {
+    public void clear() {
         lexiconWords.clear();
         translatedWords.clear();
         functions.clear();
         synonyms.clear();
+    }
 
-        for (MorphoAnalysis an : sl.getSourceConcr().lookupMorpho(word)) {
-            if (!functions.contains(an.getLemma()) && sl.getTargetConcr().hasLinearization(an.getLemma())) {
-                String s = sl.getTargetConcr().linearize(Expr.readExpr(an.getLemma()));
-                functions.add(an.getLemma());
-                translatedWords.add(s);
-                lexiconWords.add(new LexiconWord(an.getLemma(), s, "", speechTag(an.getLemma()), "", ""));
+    public String wordTranslator(String word) {
+        clear();
+
+        String form = null;
+        for (FullFormEntry entry : sl.getSourceConcr().lookupWordPrefix(word)) {
+            form = entry.getForm();
+            for (MorphoAnalysis an : entry.getAnalyses()) {
+                if (!functions.contains(an.getLemma()) && sl.getTargetConcr().hasLinearization(an.getLemma())) {
+                    String s = sl.getTargetConcr().linearize(Expr.readExpr(an.getLemma()));
+                    functions.add(an.getLemma());
+                    translatedWords.add(s);
+                    lexiconWords.add(new LexiconWord(an.getLemma(), s, "", speechTag(an.getLemma()), "", ""));
+                }
             }
+            if (lexiconWords.size() > 0)
+                break;
         }
 
         //Needs to be called, updates explanation livedata
         // searchForFunctions(functions);
         searchForSynonyms(synonyms);
         searchForFunctionsWithCheck(functions);
+
+        return form;
     }
 
 
