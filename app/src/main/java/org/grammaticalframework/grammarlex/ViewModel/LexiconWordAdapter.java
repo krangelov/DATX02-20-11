@@ -58,25 +58,7 @@ public class LexiconWordAdapter extends RecyclerView.Adapter<LexiconWordAdapter.
         viewHolder.itemView.setOnClickListener((v) -> {
             navController.navigate(action);
         });
-
-        SpannableStringBuilder builder = new SpannableStringBuilder();
-        builder.append(lexiconWord.getTag());
-        builder.append(". ");
-        builder.append(lexiconWord.getWord());
-        builder.setSpan(
-                new StyleSpan(Typeface.BOLD),
-                0, builder.length(),
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        builder.append(" ");
-        if (lexiconWord.getStatus() == null || !lexiconWord.getStatus().equals("checked")) {
-            builder.append("(?) ");
-            builder.setSpan(
-                    new ForegroundColorSpan(Color.RED),
-                    builder.length()-4, builder.length()-1,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        builder.append(lexiconWord.getExplanation());
-        viewHolder.wordTextView.setText(builder);
+        viewHolder.wordTextView.setText(lexiconWord.toDescription());
     }
 
     @Override

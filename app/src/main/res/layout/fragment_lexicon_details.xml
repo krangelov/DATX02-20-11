@@ -117,6 +117,17 @@
                     app:layout_anchor="@+id/explanationTextView"
                     app:layout_anchorGravity="start|top" />
 
+                <ImageView
+                    android:id="@+id/button3"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="right"
+                    android:src="@drawable/ic_volume_up_black_18dp"
+                    android:layout_marginRight="16dp"
+                    app:layout_anchor="@+id/explanationTextView"
+                    app:layout_anchorGravity="end|bottom"
+                    android:elevation="5dp"/>
+
             </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 

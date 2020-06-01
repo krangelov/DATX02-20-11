@@ -23,8 +23,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import org.grammaticalframework.grammarlex.Grammarlex;
 import org.grammaticalframework.grammarlex.R;
 import org.grammaticalframework.grammarlex.Repository.WNExplanation;
+import org.grammaticalframework.grammarlex.TTS;
 import org.grammaticalframework.grammarlex.ViewModel.LexiconViewModel;
 import org.grammaticalframework.grammarlex.ViewModel.LexiconWord;
 
@@ -53,9 +55,13 @@ public class LexiconDetailsFragment extends BaseFragment {
     private TableRow synonymsRow;
     private static final String TAG = LexiconDetailsFragment.class.getSimpleName();
 
+    private TTS mTts;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState); }
+        super.onCreate(savedInstanceState);
+        mTts        = new TTS(getActivity());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -78,6 +84,14 @@ public class LexiconDetailsFragment extends BaseFragment {
             navController.popBackStack();
         });
 
+        ImageView button = (ImageView) fragmentView.findViewById(R.id.button3);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTts.speak(Grammarlex.get().getTargetLanguage().getLangCode(), (String) wordView.getText());
+            }
+        });
+
         model = new ViewModelProvider(getActivity()).get(LexiconViewModel.class);
         return fragmentView;
 
@@ -94,19 +108,12 @@ public class LexiconDetailsFragment extends BaseFragment {
         synonymsRow.setVisibility(View.GONE);
 
         if(getArguments() != null){
-            SpannableStringBuilder explanationSB = new SpannableStringBuilder();
             LexiconDetailsFragmentArgs args = LexiconDetailsFragmentArgs.fromBundle(getArguments());
             LexiconWord word = args.getMessage();
             translatedWord = word.getWord();
             lemma = word.getLemma();
             wordView.setText(translatedWord);
-            if(word.getStatus() == null || !word.getStatus().equals("checked")) {
-                explanationSB.append("This word has not been checked in its translation and may therefore be incorrect!");
-                explanationSB.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, 81, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                explanationSB.append(System.getProperty("line.separator"));
-            }
-            explanationSB.append(word.getExplanation());
-            explanationTextView.setText(explanationSB);
+            explanationTextView.setText(word.toDescription());
             loadSynonymWordsForOneWord(word);
 
             // Set colors for each header in this view

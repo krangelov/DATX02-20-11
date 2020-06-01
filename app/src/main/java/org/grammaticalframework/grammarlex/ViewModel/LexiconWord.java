@@ -1,5 +1,12 @@
 package org.grammaticalframework.grammarlex.ViewModel;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
+
 import java.io.Serializable;
 
 public class LexiconWord implements Serializable {
@@ -65,5 +72,26 @@ public class LexiconWord implements Serializable {
 
     public void setLangcode(String langcode) {
         this.langcode = langcode;
+    }
+
+    public CharSequence toDescription() {
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        builder.append(tag);
+        builder.append(". ");
+        builder.append(word);
+        builder.setSpan(
+                new StyleSpan(Typeface.BOLD),
+                0, builder.length(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        builder.append(" ");
+        if (status == null || !status.equals("checked")) {
+            builder.append("(?) ");
+            builder.setSpan(
+                    new ForegroundColorSpan(Color.RED),
+                    builder.length()-4, builder.length()-1,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        builder.append(explanation);
+        return (CharSequence) builder;
     }
 }
