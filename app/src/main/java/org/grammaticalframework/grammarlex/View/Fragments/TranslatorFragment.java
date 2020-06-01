@@ -12,6 +12,8 @@ import android.text.method.PasswordTransformationMethod;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import org.grammaticalframework.pgf.Expr;
 import org.grammaticalframework.grammarlex.*;
@@ -80,8 +82,12 @@ public class TranslatorFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_translator, container, false);
         origin = (TextView) view.findViewById(R.id.origin_phrase);
         target = (TextView) view.findViewById(R.id.target_phrase);
+
         list   = (ListView) view.findViewById(R.id.input_holder);
         list.setAdapter(mAdapter);
+
+        TextView phrase_title = (TextView) view.findViewById(R.id.phrase_title);
+        phrase_title.setText(phrase.getDesc());
 
 		ImageView button = (ImageView) view.findViewById(R.id.button3);
         button.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +95,12 @@ public class TranslatorFragment extends Fragment {
             public void onClick(View v) {
 				mTts.speak(Grammarlex.get().getTargetLanguage().getLangCode(), (String) target.getText());
             }
+        });
+
+        ImageView backButton = view.findViewById(R.id.lexicon_details_back);
+        backButton.setOnClickListener((v) -> {
+            NavController navController = Navigation.findNavController(getActivity().findViewById(R.id.nav_host_fragment));
+            navController.popBackStack();
         });
 
         updateSyntax();

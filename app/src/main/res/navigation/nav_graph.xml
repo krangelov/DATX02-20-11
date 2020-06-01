@@ -66,6 +66,9 @@
         android:name="org.grammaticalframework.grammarlex.View.Fragments.TranslatorFragment"
         android:label="fragment_translator"
         tools:layout="@layout/fragment_translator">
+        <action
+            android:id="@+id/action_translatorFragment_to_phrasebookFragment"
+            app:destination="@id/phrasebookFragment" />
     </fragment>
     <fragment
         android:id="@+id/lexiconFragment"
