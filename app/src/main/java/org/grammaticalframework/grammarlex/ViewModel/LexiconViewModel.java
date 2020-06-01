@@ -70,29 +70,28 @@ public class LexiconViewModel extends AndroidViewModel {
 
     }
 
-    public void clear() {
+    public String wordTranslator(String word) {
         lexiconWords.clear();
         translatedWords.clear();
         functions.clear();
         synonyms.clear();
-    }
-
-    public String wordTranslator(String word) {
-        clear();
 
         String form = null;
-        for (FullFormEntry entry : sl.getSourceConcr().lookupWordPrefix(word)) {
-            form = entry.getForm();
-            for (MorphoAnalysis an : entry.getAnalyses()) {
-                if (!functions.contains(an.getLemma()) && sl.getTargetConcr().hasLinearization(an.getLemma())) {
-                    String s = sl.getTargetConcr().linearize(Expr.readExpr(an.getLemma()));
-                    functions.add(an.getLemma());
-                    translatedWords.add(s);
-                    lexiconWords.add(new LexiconWord(an.getLemma(), s, "", speechTag(an.getLemma()), "", ""));
+
+        if (word != null && word.length() > 0) {
+            for (FullFormEntry entry : sl.getSourceConcr().lookupWordPrefix(word)) {
+                form = entry.getForm();
+                for (MorphoAnalysis an : entry.getAnalyses()) {
+                    if (!functions.contains(an.getLemma()) && sl.getTargetConcr().hasLinearization(an.getLemma())) {
+                        String s = sl.getTargetConcr().linearize(Expr.readExpr(an.getLemma()));
+                        functions.add(an.getLemma());
+                        translatedWords.add(s);
+                        lexiconWords.add(new LexiconWord(an.getLemma(), s, "", speechTag(an.getLemma()), "", ""));
+                    }
                 }
+                if (lexiconWords.size() > 0)
+                    break;
             }
-            if (lexiconWords.size() > 0)
-                break;
         }
 
         //Needs to be called, updates explanation livedata

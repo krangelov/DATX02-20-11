@@ -189,7 +189,7 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
                         search_word.setText(form);
                     search_clear_button.setVisibility(View.VISIBLE);
                 } else {
-                    lexiconVM.clear();
+                    lexiconVM.wordTranslator("");
                     search_word.setText("");
                     search_clear_button.setVisibility(View.GONE);
                 }
