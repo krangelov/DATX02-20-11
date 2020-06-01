@@ -242,7 +242,6 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
             CharSequence searchString = getArguments().getCharSequence(Intent.EXTRA_PROCESS_TEXT);
             if (searchString != null) {
                 search_bar.setText(searchString);
-                lexiconVM.wordTranslator(searchString.toString());
             }
         }
 
