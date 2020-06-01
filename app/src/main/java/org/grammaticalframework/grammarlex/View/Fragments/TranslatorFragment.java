@@ -23,7 +23,7 @@ import org.grammaticalframework.grammarlex.phrasebook.syntax.*;
  */
 public class TranslatorFragment extends Fragment {
     protected Model model;
-//TODO:    private TTS mTts;
+    private TTS mTts;
 
 	private TextView origin,target;
 	private ListView list;
@@ -51,7 +51,7 @@ public class TranslatorFragment extends Fragment {
         List<SyntaxTree> sentences = (id == null) ? model.getSentences() : model.getGroup(id);
         phrase = sentences.get(position);
 
-//TODO:        mTts        = new TTS(getActivity());
+        mTts        = new TTS(getActivity());
         mContext    = new ChoiceContext();
 
 		mAdapter =
@@ -87,7 +87,7 @@ public class TranslatorFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//TODO:				mTts.speak(mTranslator.getTargetLanguage().getLangCode(), (String) target.getText());
+				mTts.speak(Grammarlex.get().getTargetLanguage().getLangCode(), (String) target.getText());
             }
         });
 
