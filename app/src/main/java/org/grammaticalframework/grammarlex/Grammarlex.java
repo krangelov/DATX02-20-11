@@ -8,11 +8,13 @@ import java.util.concurrent.Semaphore;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.AssetFileDescriptor;
 import android.util.Log;
 
 import org.grammaticalframework.grammarlex.R;
 import org.grammaticalframework.pgf.Concr;
 import org.grammaticalframework.pgf.PGF;
+import org.daison.Database;
 
 
 public class Grammarlex extends Application {
@@ -336,5 +338,15 @@ public class Grammarlex extends Application {
 
     public static Grammarlex get() {
         return instance;
+    }
+
+    private static Database db = null;
+    private static AssetFileDescriptor dbFD = null;
+
+    public Database getDatabase() {
+        if (db == null) {
+            db = new Database(getAssets(), "semantics.db");
+        }
+        return db;
     }
 }

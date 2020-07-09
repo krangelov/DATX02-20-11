@@ -86,7 +86,7 @@ public class FillTheGapFragment extends Fragment{
         handlerIncorrect = new Handler();
 
         model = new ViewModelProvider(requireActivity()).get(FillTheGapViewModel.class);
-        model.getUnsolvedExercise().observe(getViewLifecycleOwner(), fillTheGapExercise -> {
+        /*model.getUnsolvedExercise().observe(getViewLifecycleOwner(), fillTheGapExercise -> {
             if(fillTheGapExercise == null)
                 return;
             model.loadWord(fillTheGapExercise);
@@ -139,7 +139,7 @@ public class FillTheGapFragment extends Fragment{
             }
             sentence.setText(model.getSentence());
             instruction.setText(model.getTense());
-        });
+        });*/
         correctResult.setText("Correct attempts: " + " " + model.getCorrectAnswers());
         incorrectResult.setText("Incorrect attempts: " + " " + model.getIncorrectAnswers());
         resetButton.setText("Finish");

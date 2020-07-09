@@ -83,7 +83,7 @@ public class SynonymExerciseFragment  extends Fragment {
 
         model = new ViewModelProvider(requireActivity()).get(SynonymExerciseViewModel.class);
 
-        model.getUnsolvedExercise().observe(getViewLifecycleOwner(), synonymExercise -> {
+/*        model.getUnsolvedExercise().observe(getViewLifecycleOwner(), synonymExercise -> {
             if (synonymExercise == null)
                 return;
             model.loadWord(synonymExercise);
@@ -93,22 +93,6 @@ public class SynonymExerciseFragment  extends Fragment {
                 Button btn = buttons.get(i);
                 buttons.get(i).setText(word);
 
-                // By commenting following row a button will appear which you can use to skip exercises.
-                // You need to uncomment the code block beneath too.
-                debugSkipButton.setVisibility(View.GONE);
-                /*
-                debugSkipButton.setOnClickListener(v -> {
-                    handlerCorrect.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                            btn.getBackground().clearColorFilter();
-                            navController.navigate(R.id.action_synonymExerciseFragment_self);
-                            model.getNewExercise();
-                        }
-                    }, 500);
-                });
-*/
                 resetButton.setOnClickListener(v ->{
                     model.setCorrectAnswers(0);
                     model.setIncorrectAnswers(0);
@@ -150,7 +134,7 @@ public class SynonymExerciseFragment  extends Fragment {
                 });
             }
             word.setText(model.getWord());
-        });
+        });*/
         instruction.setText("Choose the correct synonym");
         correctResult.setText("Correct attempts: " + " " + model.getCorrectAnswers());
         incorrectResult.setText("Incorrect attempts: " + " " + model.getIncorrectAnswers());

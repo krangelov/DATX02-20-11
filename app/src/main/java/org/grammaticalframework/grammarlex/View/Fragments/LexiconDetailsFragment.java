@@ -25,7 +25,6 @@ import androidx.navigation.Navigation;
 
 import org.grammaticalframework.grammarlex.Grammarlex;
 import org.grammaticalframework.grammarlex.R;
-import org.grammaticalframework.grammarlex.Repository.WNExplanation;
 import org.grammaticalframework.grammarlex.TTS;
 import org.grammaticalframework.grammarlex.ViewModel.LexiconViewModel;
 import org.grammaticalframework.grammarlex.ViewModel.LexiconWord;
@@ -146,7 +145,7 @@ public class LexiconDetailsFragment extends BaseFragment {
         StringBuilder synonymSB = new StringBuilder();
         List<String> synonyms = new ArrayList<>();
 
-        model.getWNSynonyms().observe(getViewLifecycleOwner(), wnSynonyms ->{
+/*        model.getWNSynonyms().observe(getViewLifecycleOwner(), wnSynonyms ->{
             Concr target = model.getTargetConcr();
 
             for (WNExplanation synonym : wnSynonyms){
@@ -174,7 +173,7 @@ public class LexiconDetailsFragment extends BaseFragment {
             } else {
                 foundSynonymList.clear();
             }
-        });
+        });*/
     }
 
     private void constructSynonymWordsString(String synonymCode, StringBuilder synonymSB){

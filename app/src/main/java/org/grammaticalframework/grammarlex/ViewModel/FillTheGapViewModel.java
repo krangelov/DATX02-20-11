@@ -5,8 +5,6 @@ import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import org.grammaticalframework.grammarlex.Repository.FillTheGapExercise;
-import org.grammaticalframework.grammarlex.Repository.ExerciseRepository;
 import org.grammaticalframework.grammarlex.Grammarlex;
 import org.grammaticalframework.grammarlex.gf.GF;
 import org.grammaticalframework.pgf.Bracket;
@@ -24,15 +22,15 @@ public class FillTheGapViewModel extends AndroidViewModel {
     private Expr expression;
     private GF gf;
 
-    private FillTheGapExercise ftge;
+//    private FillTheGapExercise ftge;
 
-    private ExerciseRepository exerciseRepository;
+//    private ExerciseRepository exerciseRepository;
 
     private String redactedWord;
     private String linearizedSentence;
     private ArrayList<String> inflections = new ArrayList<>();
 
-    private LiveData<FillTheGapExercise> unsolvedExercise;
+//    private LiveData<FillTheGapExercise> unsolvedExercise;
 
     private Grammarlex mGrammarlex;
 
@@ -45,23 +43,23 @@ public class FillTheGapViewModel extends AndroidViewModel {
         mGrammarlex = (Grammarlex) getApplication().getApplicationContext();
         gf = new GF(mGrammarlex);
 
-        exerciseRepository = new ExerciseRepository(application);
+  /*      exerciseRepository = new ExerciseRepository(application);
 
-        unsolvedExercise = exerciseRepository.getUnsolvedFillTheGapExercise();
+        unsolvedExercise = exerciseRepository.getUnsolvedFillTheGapExercise();*/
     }
 
-    public void loadWord(FillTheGapExercise ftge) {
+    /*public void loadWord(FillTheGapExercise ftge) {
         this.ftge = ftge;
         expression = Expr.readExpr(ftge.getAbstractSyntaxTree());
         linearizedSentence = mGrammarlex.getTargetConcr().linearize(expression);
         Object[] bs = mGrammarlex.getTargetConcr().bracketedLinearize(expression);
         findWordToRedact(bs[0]);
         setRedactedWord();
-    }
+    }*/
 
-    public LiveData<FillTheGapExercise> getUnsolvedExercise() {
+    /*public LiveData<FillTheGapExercise> getUnsolvedExercise() {
         return unsolvedExercise;
-    }
+    }*/
 
     public int getCorrectAnswers() {
         return correctAnswers;
@@ -93,26 +91,26 @@ public class FillTheGapViewModel extends AndroidViewModel {
         return notAllInflections;
     }
 
-    public boolean checkCorrectAnswer(String answer){
+    /*public boolean checkCorrectAnswer(String answer){
         if(answer.equals(redactedWord)){
             linearizedSentence = mGrammarlex.getTargetConcr().linearize(Expr.readExpr(ftge.getAbstractSyntaxTree()));
             return true;
         } else{
             return false;
         }
-    }
+    }*/
 
 
     //Should only be called when the previous exercise was solved
     public void getNewSentence(){
         //say that the next exercise is solved
-        exerciseRepository.addSolvedFillTheGapExercise(ftge);
+        //exerciseRepository.addSolvedFillTheGapExercise(ftge);
         //nextExercise.setValue("spare_V3");
     }
 
 
     private void findWordToRedact(Object bs){
-        if(bs instanceof Bracket){
+        /*if(bs instanceof Bracket){
             if(((Bracket) bs).fun.equals(ftge.getFunctionToReplace())){
                 redactedWord = ((Bracket) bs).children[0].toString();
                 inflect(((Bracket) bs).fun);
@@ -123,7 +121,7 @@ public class FillTheGapViewModel extends AndroidViewModel {
                     }
                 }
             }
-        }
+        }*/
     }
 
     private void inflect(String verb) {
@@ -171,8 +169,9 @@ public class FillTheGapViewModel extends AndroidViewModel {
 
 
     public String getTense(){
-        Expr e = Expr.readExpr( ftge.getTenseFunction());
+        /*Expr e = Expr.readExpr( ftge.getTenseFunction());
         Expr e2 = Expr.readExpr("PhrUtt NoPConj (UttImpPol PPos (ImpVP (ComplSlash (SlashV2a choose_1_V2) (MassNP (UseN tense_N))))) NoVoc");
-        return mGrammarlex.getTargetConcr().linearize(e2) + ": " + mGrammarlex.getTargetConcr().linearize(e);
+        return mGrammarlex.getTargetConcr().linearize(e2) + ": " + mGrammarlex.getTargetConcr().linearize(e);*/
+        return null;
     }
 }

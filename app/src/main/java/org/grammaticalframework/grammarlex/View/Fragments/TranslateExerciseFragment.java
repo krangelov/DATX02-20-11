@@ -85,7 +85,7 @@ public class TranslateExerciseFragment extends Fragment {
 
         model = new ViewModelProvider(requireActivity()).get(TranslateExerciseViewModel.class);
 
-        model.getUnsolvedExercise().observe(getViewLifecycleOwner(), translateExercise -> {
+/*        model.getUnsolvedExercise().observe(getViewLifecycleOwner(), translateExercise -> {
             if (translateExercise == null){
                 return;
             }
@@ -137,7 +137,7 @@ public class TranslateExerciseFragment extends Fragment {
                 });
             }
             word.setText(model.getWord());
-        });
+        });*/
         instruction.setText("Choose the correct translation");
         correctResult.setText("Correct attempts: " + " " + model.getCorrectAnswers());
         incorrectResult.setText("Incorrect attempts: " + " " + model.getIncorrectAnswers());

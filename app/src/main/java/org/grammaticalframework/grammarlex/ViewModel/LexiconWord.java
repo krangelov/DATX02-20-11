@@ -12,21 +12,19 @@ import java.io.Serializable;
 public class LexiconWord implements Serializable {
     private String lemma;
     private String word;
-    private String explanation;
+    private String gloss;
     private String tag;
-    private String synonymCode;
+    private Long synset_id;
+    private SenseSchema.Status status;
     private String synonymWords;
-    //The status of the linearization, i.e. if it has been checked or is guessed
-    private String status = null;
-    //The language code for the word
-    private String langcode = null;
 
-    public LexiconWord(String lemma, String word, String explanation, String tag, String synonymCode, String synonymWords) {
+    public LexiconWord(String lemma, String word, String gloss, String tag, Long synset_id, String synonymWords) {
         this.lemma = lemma;
         this.word = word;
-        this.explanation = explanation;
+        this.gloss = gloss;
         this.tag = tag;
-        this.synonymCode = synonymCode;
+        this.synset_id = synset_id;
+        this.status = null;
         this.synonymWords = synonymWords;
     }
 
@@ -36,42 +34,34 @@ public class LexiconWord implements Serializable {
         return word;
     }
 
-    public String getExplanation() {
-        return explanation;
+    public String getGloss() {
+        return gloss;
     }
 
-    public void setExplanation(String explanation) { this.explanation = explanation; }
+    public void setGloss(String gloss) { this.gloss = gloss; }
 
     public String getTag(){
         return tag;
     }
 
-    public String getSynonymCode(){
-        return synonymCode;
+    public Long getSynsetId(){
+        return synset_id;
     }
 
-    public void setSynonymCode(String synonyms){
-        this.synonymCode = synonyms;
+    public void setSynsetId(Long synset_id){
+        this.synset_id = synset_id;
     }
     
     public void setSynonymWords(String synonymWords){this.synonymWords = synonymWords;}
 
     public String getSynonymWords() {return synonymWords;}
 
-    public String getStatus() {
+    public SenseSchema.Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(SenseSchema.Status status) {
         this.status = status;
-    }
-
-    public String getLangcode() {
-        return langcode;
-    }
-
-    public void setLangcode(String langcode) {
-        this.langcode = langcode;
     }
 
     public CharSequence toDescription() {
@@ -84,14 +74,14 @@ public class LexiconWord implements Serializable {
                 0, builder.length(),
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         builder.append(" ");
-        if (status == null || !status.equals("checked")) {
+        if (status == null || !status.equals(SenseSchema.Status.Checked)) {
             builder.append("(?) ");
             builder.setSpan(
                     new ForegroundColorSpan(Color.RED),
                     builder.length()-4, builder.length()-1,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
-        builder.append(explanation);
+        builder.append(gloss);
         return (CharSequence) builder;
     }
 }

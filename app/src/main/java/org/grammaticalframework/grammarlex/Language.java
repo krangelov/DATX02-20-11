@@ -37,7 +37,7 @@ public class Language implements Serializable {
         return mLangName;
     }
 
-    String getConcrete() {
+    public String getConcrete() {
         return mConcrete;
     }
 

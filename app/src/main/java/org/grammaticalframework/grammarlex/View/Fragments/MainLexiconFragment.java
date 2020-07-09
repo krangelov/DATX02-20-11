@@ -8,7 +8,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,17 +33,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.AppBarLayout;
 
+import org.grammaticalframework.grammarlex.Grammarlex;
 import org.grammaticalframework.grammarlex.Language;
 import org.grammaticalframework.grammarlex.R;
-import org.grammaticalframework.grammarlex.Repository.WNExplanationWithCheck;
 import org.grammaticalframework.grammarlex.View.FragmentFactory;
 import org.grammaticalframework.grammarlex.ViewModel.LexiconViewModel;
-import org.grammaticalframework.grammarlex.ViewModel.LexiconWord;
 import org.grammaticalframework.grammarlex.ViewModel.LexiconWordAdapter;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -107,8 +102,10 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
 
         search_clear_button.setVisibility(View.GONE);
 
+        Grammarlex gl = Grammarlex.get();
+
         // Adapter for list items to show in recycler view
-        ArrayAdapter<Language> spinnerLanguages = new ArrayAdapter<>(getActivity(), R.layout.spinner_item, lexiconVM.getAvailableLanguages());
+        ArrayAdapter<Language> spinnerLanguages = new ArrayAdapter<>(getActivity(), R.layout.spinner_item, gl.getAvailableLanguages());
         spinnerLanguages.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         fromLanguageSpinner.setAdapter(spinnerLanguages);
         toLanguageSpinner.setAdapter(spinnerLanguages);
@@ -116,11 +113,11 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
 
         // Set initial languages in spinners and text
         updateVM = false;
-        fromLanguageSpinner.setSelection(lexiconVM.getLanguageIndex(lexiconVM.getSourceLanguage()));
-        toLanguageSpinner.setSelection(lexiconVM.getLanguageIndex(lexiconVM.getTargetLanguage()));
+        fromLanguageSpinner.setSelection(gl.getLanguageIndex(gl.getSourceLanguage()));
+        toLanguageSpinner.setSelection(gl.getLanguageIndex(gl.getTargetLanguage()));
         updateVM = true;
-        from_lang_short.setText(parseLangCode(lexiconVM.getSourceLanguage().getLangCode()));
-        to_lang_short.setText(parseLangCode(lexiconVM.getTargetLanguage().getLangCode()));
+        from_lang_short.setText(parseLangCode(gl.getSourceLanguage().getLangCode()));
+        to_lang_short.setText(parseLangCode(gl.getTargetLanguage().getLangCode()));
 
         // Listeners for views
         search_clear_button.setOnClickListener((v) -> {
@@ -193,6 +190,7 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
                     search_word.setText("");
                     search_clear_button.setVisibility(View.GONE);
                 }
+                wordAdapter.setLexiconWordList(lexiconVM.getLexiconWords());
             }
         });
 
@@ -201,7 +199,7 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (updateVM) {
                     Language lang = (Language) parent.getSelectedItem();
-                    lexiconVM.setSourceLanguage(lang);
+                    Grammarlex.get().setSourceLanguage(lang);
 
                     from_lang_short.setText(parseLangCode(lang.getLangCode()));
                 }
@@ -219,7 +217,7 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
                 // Update view model only when the user is manually selecting a language, not in initialization or language switching
                 if (updateVM) {
                     Language lang = (Language) parent.getSelectedItem();
-                    lexiconVM.setTargetLanguage(lang);
+                    Grammarlex.get().setTargetLanguage(lang);
                     to_lang_short.setText(parseLangCode(lang.getLangCode()));
                 }
             }
@@ -242,6 +240,7 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
             CharSequence searchString = getArguments().getCharSequence(Intent.EXTRA_PROCESS_TEXT);
             if (searchString != null) {
                 search_bar.setText(searchString);
+                wordAdapter.notifyDataSetChanged();
             }
         }
 
@@ -253,54 +252,8 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         //Observe livedata from viwemodel
-        //wordAdapter.setLexiconWordList(lexiconVM.getLexiconWords());
-
-        lexiconVM.getWnExplanationsWithChecks().observe(getViewLifecycleOwner(), wnExplanations -> {
-            List<LexiconWord> lexiconWordList = lexiconVM.getLexiconWords();
-            for(WNExplanationWithCheck explanation : wnExplanations){
-                for(int i = 0; i < lexiconWordList.size(); i++){
-                    LexiconWord lexiconWord = lexiconWordList.get(i);
-                    if(lexiconWord.getLemma().equals(explanation.getWnExplanation().getFunction())){
-                        lexiconWord.setExplanation(explanation.getWnExplanation().getExplanation());
-                        if(explanation.getCheckedFunction() != null) {
-                            lexiconWord.setStatus(explanation.getCheckedFunction().getStatus());
-                            lexiconWord.setLangcode(explanation.getCheckedFunction().getLangcode());
-                        }
-                        lexiconWordList.set(i, lexiconWord);
-                        wordAdapter.setLexiconWordList(lexiconWordList);
-                        if(!(lexiconWord.getSynonymCode().equals("random_siffra"))){
-                            lexiconWord.setSynonymCode(explanation.getWnExplanation().getSynonym());
-                            lexiconVM.getSynonyms().add(explanation.getWnExplanation().getSynonym());
-                        }
-                    }
-                }
-            }
-            lexiconVM.setLexiconWords(lexiconWordList);
-            Collections.sort(lexiconWordList, new Comparator<LexiconWord>() {
-                @Override
-                public int compare(LexiconWord lhs, LexiconWord rhs) {
-                    // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
-                    if(lhs.getStatus() != null && rhs.getStatus() == null)
-                        return -1;
-                    if(lhs.getStatus() == null && rhs.getStatus() != null)
-                        return 1;
-                    if(lhs.getStatus() == null && rhs.getStatus() == null)
-                        return 0;
-                    if (lhs.getStatus().equals(rhs.getStatus()))
-                        return 0;
-                    if(lhs.getStatus().equals("checked"))
-                        return -1;
-                    if(rhs.getStatus().equals("checked"))
-                        return 1;
-                    return 0;
-                }
-            });
-            wordAdapter.setLexiconWordList(lexiconWordList);
-            wordAdapter.notifyDataSetChanged();
-        });
-
+        wordAdapter.setLexiconWordList(lexiconVM.getLexiconWords());
         rvLexicon.addItemDecoration(new DividerItemDecoration((rvLexicon.getContext()), DividerItemDecoration.VERTICAL));
-
     }
 
     private void hideKeyboard(View view){
@@ -388,7 +341,6 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
      */
     private String parseLangCode(String langCode) {
         String firstLetters = langCode.substring(0, 3);
-        Log.d(TAG, "First letters: " + firstLetters);
         if (firstLetters.contains("-"))
             return firstLetters.substring(0, 2).toUpperCase();
         else
@@ -396,10 +348,12 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
     }
 
     private void switchLanguages() {
-        lexiconVM.switchLanguages();
+        Grammarlex gl = Grammarlex.get();
+
+        gl.switchLanguages();
         updateVM = false;
-        fromLanguageSpinner.setSelection(lexiconVM.getLanguageIndex(lexiconVM.getSourceLanguage()));
-        toLanguageSpinner.setSelection(lexiconVM.getLanguageIndex(lexiconVM.getTargetLanguage()));
+        fromLanguageSpinner.setSelection(gl.getLanguageIndex(gl.getSourceLanguage()));
+        toLanguageSpinner.setSelection(gl.getLanguageIndex(gl.getTargetLanguage()));
         updateVM = true;
     }
 }
