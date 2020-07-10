@@ -38,14 +38,10 @@ public class TranslatorInputMethodService extends InputMethodService
 
     private int mActionId;
 
-    private Grammarlex mTranslator;
-
     @Override
     public void onCreate() {
         super.onCreate();
-        
-        mTranslator = ((Grammarlex) getApplicationContext());
-        
+
         mSymbolsPage1Keyboard = null;
         mSymbolsPage2Keyboard = null;
         mLanguagePage1Keyboard = null;
@@ -72,7 +68,7 @@ public class TranslatorInputMethodService extends InputMethodService
     private EditorInfo mAttribute;
     private static TranslatorInputMethodService mInstance;
 
-    static TranslatorInputMethodService getInstance() {
+    public static TranslatorInputMethodService getInstance() {
     	return mInstance;
     }
 
@@ -96,9 +92,9 @@ public class TranslatorInputMethodService extends InputMethodService
         mCompletions = null;
     
     	int res1 =
-           	mTranslator.getSourceLanguage().getKeyboardPage1Resource();
+           	Grammarlex.get().getSourceLanguage().getKeyboardPage1Resource();
     	int res2 =
-            mTranslator.getSourceLanguage().getKeyboardPage2Resource();
+            Grammarlex.get().getSourceLanguage().getKeyboardPage2Resource();
     	mModeId = R.string.normalKeyboardMode;
        	if (attribute.extras != null &&
             !attribute.extras.getBoolean("show_language_toggle", true)) {
@@ -277,9 +273,9 @@ public class TranslatorInputMethodService extends InputMethodService
                 mComposingWord.setLength(mComposingWord.length()-1);
             }
         }
-        
-        onKey(c, null);
-        
+
+        //onKey(c, null);
+
         return true;
     }
     
@@ -369,13 +365,13 @@ public class TranslatorInputMethodService extends InputMethodService
             handleShift();
         } else if (primaryCode == TranslatorKeyboard.KEYCODE_SOURCE_LANGUAGE
                 && mInputView != null) {
-        	mTranslator.switchLanguages();
+            Grammarlex.get().switchLanguages();
             handleSwitchLanguages();
         } else if (primaryCode < TranslatorKeyboard.KEYCODE_SOURCE_LANGUAGE &&
         		   primaryCode > TranslatorKeyboard.KEYCODE_SOURCE_LANGUAGE-TranslatorKeyboard.MAX_LANGUAGE_KEYCODES) {
-        	Language newSource = 
-        		mTranslator.getAvailableLanguages().get(TranslatorKeyboard.KEYCODE_SOURCE_LANGUAGE-primaryCode-1);
-            mTranslator.setSourceLanguage(newSource);
+        	Language newSource =
+                Grammarlex.get().getAvailableLanguages().get(TranslatorKeyboard.KEYCODE_SOURCE_LANGUAGE-primaryCode-1);
+            Grammarlex.get().setSourceLanguage(newSource);
             handleChangeSourceLanguage(newSource);
         } else if (primaryCode == TranslatorKeyboard.KEYCODE_TARGET_LANGUAGE) {
 /*        	String translation = mTranslator.translate(getComposingString()).first;
@@ -386,8 +382,8 @@ public class TranslatorInputMethodService extends InputMethodService
         }  else if (primaryCode < TranslatorKeyboard.KEYCODE_TARGET_LANGUAGE &&
          		   primaryCode > TranslatorKeyboard.KEYCODE_TARGET_LANGUAGE-TranslatorKeyboard.MAX_LANGUAGE_KEYCODES) {
          	Language newTarget =
-         		mTranslator.getAvailableLanguages().get(TranslatorKeyboard.KEYCODE_TARGET_LANGUAGE-primaryCode-1);
-             mTranslator.setTargetLanguage(newTarget);
+                Grammarlex.get().getAvailableLanguages().get(TranslatorKeyboard.KEYCODE_TARGET_LANGUAGE-primaryCode-1);
+            Grammarlex.get().setTargetLanguage(newTarget);
              handleChangeTargetLanguage(newTarget);
          } else if (primaryCode == TranslatorKeyboard.KEYCODE_MODE_CHANGE &&
                     mInputView != null) {
@@ -566,7 +562,7 @@ public class TranslatorInputMethodService extends InputMethodService
         mInputView.closing();
     }
 
-    void handleChangeSourceLanguage(Language newSource) {
+    public void handleChangeSourceLanguage(Language newSource) {
        	updateLanguageKeyboard(newSource);
        	mSymbolsPage1Keyboard.updateLanguageKeyLabels();
         mSymbolsPage2Keyboard.updateLanguageKeyLabels();
@@ -575,7 +571,7 @@ public class TranslatorInputMethodService extends InputMethodService
         }
     }
 
-    void handleChangeTargetLanguage(Language newTarget) {
+    public void handleChangeTargetLanguage(Language newTarget) {
     	mLanguagePage1Keyboard.updateLanguageKeyLabels();
     	mLanguagePage2Keyboard.updateLanguageKeyLabels();
     	mSymbolsPage1Keyboard.updateLanguageKeyLabels();
@@ -585,8 +581,8 @@ public class TranslatorInputMethodService extends InputMethodService
     	}
     }
 
-    void handleSwitchLanguages() {
-    	Language newSource = mTranslator.getSourceLanguage();
+    public void handleSwitchLanguages() {
+    	Language newSource = Grammarlex.get().getSourceLanguage();
     	updateLanguageKeyboard(newSource);
        	mSymbolsPage1Keyboard.updateLanguageKeyLabels();
         mSymbolsPage2Keyboard.updateLanguageKeyLabels();

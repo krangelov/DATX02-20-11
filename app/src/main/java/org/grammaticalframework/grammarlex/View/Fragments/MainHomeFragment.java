@@ -9,8 +9,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import org.grammaticalframework.grammarlex.Grammarlex;
 import org.grammaticalframework.grammarlex.R;
 import org.grammaticalframework.grammarlex.Language;
+import org.grammaticalframework.grammarlex.TranslatorInputMethodService;
 import org.grammaticalframework.grammarlex.ViewModel.HomeViewModel;
 
 import java.util.Random;
@@ -55,6 +57,9 @@ public class MainHomeFragment extends BaseFragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Language lang = (Language) parent.getSelectedItem();
                 homeVM.setSourceLanguage(lang);
+
+                if (TranslatorInputMethodService.getInstance() != null)
+                    TranslatorInputMethodService.getInstance().handleChangeSourceLanguage(Grammarlex.get().getSourceLanguage());
             }
 
             @Override
@@ -68,6 +73,9 @@ public class MainHomeFragment extends BaseFragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Language lang = (Language) parent.getSelectedItem();
                 homeVM.setTargetLanguage(lang);
+
+                if (TranslatorInputMethodService.getInstance() != null)
+                    TranslatorInputMethodService.getInstance().handleChangeTargetLanguage(Grammarlex.get().getTargetLanguage());
             }
 
             @Override

@@ -22,16 +22,12 @@ import org.grammaticalframework.grammarlex.TranslatorKeyboard;
 
 public class TranslatorKeyboardView extends KeyboardView {
 
-	private Grammarlex mTranslator;
-
     public TranslatorKeyboardView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mTranslator = ((Grammarlex) context.getApplicationContext());
     }
 
     public TranslatorKeyboardView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        mTranslator = ((Grammarlex) context.getApplicationContext());
     }
 
     private PopupWindow mLanguagesPopup = null;
@@ -46,7 +42,7 @@ public class TranslatorKeyboardView extends KeyboardView {
 	
 	    	int index = 0;
 	    	TableRow row = null;
-	    	for (Language lang : mTranslator.getAvailableLanguages()) {
+	    	for (Language lang : Grammarlex.get().getAvailableLanguages()) {
 	    		int col_index = index % 4;
 	    		if (col_index == 0) {
 	    			row = new TableRow(getContext());

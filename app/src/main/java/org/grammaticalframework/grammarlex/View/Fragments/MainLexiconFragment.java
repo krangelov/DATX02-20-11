@@ -36,6 +36,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import org.grammaticalframework.grammarlex.Grammarlex;
 import org.grammaticalframework.grammarlex.Language;
 import org.grammaticalframework.grammarlex.R;
+import org.grammaticalframework.grammarlex.TranslatorInputMethodService;
 import org.grammaticalframework.grammarlex.View.FragmentFactory;
 import org.grammaticalframework.grammarlex.ViewModel.LexiconViewModel;
 import org.grammaticalframework.grammarlex.ViewModel.LexiconWordAdapter;
@@ -79,7 +80,6 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
         lexiconVM = new ViewModelProvider(getActivity()).get(LexiconViewModel.class);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_lexicon, container, false);
@@ -101,6 +101,9 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
         fromLanguageSpinner.setDropDownVerticalOffset(100);
 
         search_clear_button.setVisibility(View.GONE);
+
+        Bundle extras = search_bar.getInputExtras(true);
+        extras.putBoolean("show_language_toggle", false);
 
         Grammarlex gl = Grammarlex.get();
 
@@ -203,6 +206,8 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
 
                     from_lang_short.setText(parseLangCode(lang.getLangCode()));
                 }
+                if (TranslatorInputMethodService.getInstance() != null)
+                    TranslatorInputMethodService.getInstance().handleChangeSourceLanguage(gl.getSourceLanguage());
             }
 
             @Override
@@ -220,6 +225,8 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
                     Grammarlex.get().setTargetLanguage(lang);
                     to_lang_short.setText(parseLangCode(lang.getLangCode()));
                 }
+                if (TranslatorInputMethodService.getInstance() != null)
+                    TranslatorInputMethodService.getInstance().handleChangeTargetLanguage(gl.getTargetLanguage());
             }
 
             @Override
@@ -355,6 +362,10 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
         fromLanguageSpinner.setSelection(gl.getLanguageIndex(gl.getSourceLanguage()));
         toLanguageSpinner.setSelection(gl.getLanguageIndex(gl.getTargetLanguage()));
         updateVM = true;
+
+        if (TranslatorInputMethodService.getInstance() != null) {
+            TranslatorInputMethodService.getInstance().handleSwitchLanguages();
+        }
     }
 }
 
