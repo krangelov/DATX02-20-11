@@ -4,7 +4,6 @@ import android.app.Application;
 
 import org.grammaticalframework.grammarlex.Language;
 import org.grammaticalframework.grammarlex.Grammarlex;
-import org.grammaticalframework.grammarlex.gf.GF;
 import org.grammaticalframework.pgf.Concr;
 import org.grammaticalframework.pgf.Expr;
 import org.grammaticalframework.pgf.FullFormEntry;
@@ -25,7 +24,6 @@ public class LexiconViewModel extends AndroidViewModel {
     private List<LexiconWord> lexiconWords;
 
     private static final String TAG = LexiconViewModel.class.getSimpleName();
-    private GF gfClass;
 
     //The functions that we are going to find in wordnet
     private List<String> synonyms = new ArrayList<>();
@@ -33,7 +31,6 @@ public class LexiconViewModel extends AndroidViewModel {
     public LexiconViewModel(@NonNull Application application) {
         super(application);
         lexiconWords = new ArrayList<>();
-        gfClass = new GF(Grammarlex.get());
     }
 
     public String wordTranslator(String word) {

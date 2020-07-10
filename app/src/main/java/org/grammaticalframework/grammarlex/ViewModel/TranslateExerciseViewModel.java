@@ -6,7 +6,6 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import org.grammaticalframework.grammarlex.Grammarlex;
-import org.grammaticalframework.grammarlex.gf.GF;
 import org.grammaticalframework.pgf.Expr;
 
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ public class TranslateExerciseViewModel extends AndroidViewModel {
     private static final String TAG = TranslateExerciseViewModel.class.getSimpleName();
 
     private Grammarlex mGrammarlex;
-    private GF gf;
 //    private TranslateExercise translateExercise;
 
     private String linearizedTranslateWord;
@@ -36,7 +34,6 @@ public class TranslateExerciseViewModel extends AndroidViewModel {
     public TranslateExerciseViewModel(Application application){
         super(application);
         mGrammarlex = (Grammarlex) getApplication().getApplicationContext();
-        gf = new GF(mGrammarlex);
 
         linearizedAlternatives = new ArrayList<>();
 

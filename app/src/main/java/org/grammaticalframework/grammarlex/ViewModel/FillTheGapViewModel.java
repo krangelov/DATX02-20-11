@@ -6,7 +6,6 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import org.grammaticalframework.grammarlex.Grammarlex;
-import org.grammaticalframework.grammarlex.gf.GF;
 import org.grammaticalframework.pgf.Bracket;
 import org.grammaticalframework.pgf.Expr;
 
@@ -20,7 +19,6 @@ public class FillTheGapViewModel extends AndroidViewModel {
 
     private static final String TAG = FillTheGapViewModel.class.getSimpleName();
     private Expr expression;
-    private GF gf;
 
 //    private FillTheGapExercise ftge;
 
@@ -41,7 +39,6 @@ public class FillTheGapViewModel extends AndroidViewModel {
         super(application);
 
         mGrammarlex = (Grammarlex) getApplication().getApplicationContext();
-        gf = new GF(mGrammarlex);
 
   /*      exerciseRepository = new ExerciseRepository(application);
 

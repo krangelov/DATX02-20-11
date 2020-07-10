@@ -6,7 +6,6 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import org.grammaticalframework.grammarlex.Grammarlex;
-import org.grammaticalframework.grammarlex.gf.GF;
 import org.grammaticalframework.pgf.Expr;
 
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ public class SynonymExerciseViewModel extends AndroidViewModel {
     private static final String TAG = SynonymExerciseViewModel.class.getSimpleName();
 
     private Grammarlex mGrammarlex;
-    private GF gf;
 //    private SynonymExercise synonymExercise;
 
     private String linearizedSynonym;
@@ -35,7 +33,6 @@ public class SynonymExerciseViewModel extends AndroidViewModel {
     public SynonymExerciseViewModel(Application application){
         super(application);
         mGrammarlex = (Grammarlex) getApplication().getApplicationContext();
-        gf = new GF(mGrammarlex);
 
 //        exerciseRepository = new ExerciseRepository(application);
 //        unsolvedExercise = exerciseRepository.getunsolvedSynonymExercise();
