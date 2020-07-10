@@ -56,6 +56,7 @@ public class SenseSchema {
 
 	public static final Table<Lexeme> lexemes;
 	public static final Index<Lexeme,String> lexemes_fun;
+	public static final Index<Lexeme,Long> lexemes_synset;
 
 	public static final Table<Synset> synsets;
 
@@ -63,6 +64,8 @@ public class SenseSchema {
 		lexemes = new Table<Lexeme>("lexemes", Lexeme.class);
 		lexemes_fun = new Index<Lexeme,String>(lexemes, "fun", String.class, (lex) -> lex.lex_fun);
 		lexemes.addIndex(lexemes_fun);
+		lexemes_synset = new Index<Lexeme,Long>(lexemes, "synset", Long.class, (lex) -> lex.synset_id);
+		lexemes.addIndex(lexemes_synset);
 
 		synsets = new Table<Synset>("synsets", Synset.class);
 	}

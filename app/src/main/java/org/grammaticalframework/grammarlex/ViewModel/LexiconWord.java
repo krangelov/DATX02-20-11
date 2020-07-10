@@ -8,6 +8,8 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LexiconWord implements Serializable {
     private String lemma;
@@ -17,7 +19,7 @@ public class LexiconWord implements Serializable {
     private Long synset_id;
     private SenseSchema.Status status;
     private SenseSchema.ImageInfo[] images;
-    private String synonymWords;
+    private List<String> synonymWords;
 
     public LexiconWord(String lemma, String tag, String word) {
         this.lemma = lemma;
@@ -27,7 +29,7 @@ public class LexiconWord implements Serializable {
         this.synset_id = null;
         this.status = null;
         this.images = null;
-        this.synonymWords = null;
+        this.synonymWords = new ArrayList<>();
     }
 
     public String getLemma() {return lemma; }
@@ -54,9 +56,11 @@ public class LexiconWord implements Serializable {
         this.synset_id = synset_id;
     }
 
-    public void setSynonymWords(String synonymWords){this.synonymWords = synonymWords;}
+    public List<String> getSynonymWords() { return synonymWords; }
 
-    public String getSynonymWords() {return synonymWords;}
+    public void addSynonymWord(String synonymWord) {
+        this.synonymWords.add(synonymWord);
+    }
 
     public SenseSchema.Status getStatus() {
         return status;

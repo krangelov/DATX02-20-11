@@ -50,8 +50,6 @@ import com.larvalabs.svgandroid.*;
 public class LexiconDetailsFragment extends BaseFragment {
 
     private ImageView backButton;
-    private List <String> foundSynonymList;
-    private String translatedWord;
     private String lemma;
     private NavController navController;
     private LexiconViewModel model;
@@ -78,7 +76,6 @@ public class LexiconDetailsFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_lexicon_details, container, false);
 
-        foundSynonymList = new ArrayList<>();
         wordView = fragmentView.findViewById(R.id.translated_word);
         explanationTextView = fragmentView.findViewById(R.id.explanationTextView);
         synonymTextView = fragmentView.findViewById(R.id.synonymTextView);
@@ -108,7 +105,6 @@ public class LexiconDetailsFragment extends BaseFragment {
         return fragmentView;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -121,16 +117,20 @@ public class LexiconDetailsFragment extends BaseFragment {
         if(getArguments() != null){
             LexiconDetailsFragmentArgs args = LexiconDetailsFragmentArgs.fromBundle(getArguments());
             LexiconWord word = args.getMessage();
-            translatedWord = word.getWord();
             lemma = word.getLemma();
-            wordView.setText(translatedWord);
+            wordView.setText(word.getWord());
 
             // show The Image in a ImageView
             new DownloadImagesTask().execute(word.getImages());
 
             explanationTextView.setText(word.toDescription());
 
-            loadSynonymWordsForOneWord(word);
+            if(word.getSynonymWords().size() != 0){
+                synonymTextView.setText(String.join(", ", word.getSynonymWords()));
+                synonymTextView.setVisibility(View.VISIBLE);
+                synonymsHeader.setVisibility(View.VISIBLE);
+                synonymsRow.setVisibility(View.VISIBLE);
+            }
 
             // Set colors for each header in this view
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -156,41 +156,6 @@ public class LexiconDetailsFragment extends BaseFragment {
                 }
             });
         }
-    }
-
-    private void loadSynonymWordsForOneWord(LexiconWord lexiconWord){
-        StringBuilder synonymSB = new StringBuilder();
-        List<String> synonyms = new ArrayList<>();
-
-/*        model.getWNSynonyms().observe(getViewLifecycleOwner(), wnSynonyms ->{
-            Concr target = model.getTargetConcr();
-
-            for (WNExplanation synonym : wnSynonyms){
-                if(!synonym.getSynonym().equals("random_siffra")){
-                    if (!lexiconWord.getSynonymCode().equals("random_siffra") && lexiconWord.getExplanation().equals(synonym.getExplanation())
-                            && !foundSynonymList.contains(synonym.getFunction()) && !(lexiconWord.getLemma().equals(synonym.getFunction()))){
-                        foundSynonymList.add(synonym.getFunction());
-                        //lexiconWord.setSynonymWords(constructSynonymWordsString(synonym.getFunction(), synonymSB));
-                        String func = synonym.getFunction();
-                        if (target.hasLinearization(func)) {
-                            String synonymWord = GF.linearizeFunction(func, model.getTargetConcr());
-                            if (!synonyms.contains(synonymWord) && !synonymWord.equals(lexiconWord.getWord())) {
-                                constructSynonymWordsString(synonymWord, synonymSB);
-                                synonyms.add(synonymWord);
-                            }
-                        }
-                    }
-                }
-            }
-            if(synonymSB.length() != 0){
-                synonymTextView.setText(synonymSB);
-                synonymTextView.setVisibility(View.VISIBLE);
-                synonymsHeader.setVisibility(View.VISIBLE);
-                synonymsRow.setVisibility(View.VISIBLE);
-            } else {
-                foundSynonymList.clear();
-            }
-        });*/
     }
 
     private class DownloadImagesTask extends AsyncTask<SenseSchema.ImageInfo[], Void, Pair<Drawable,Uri>[]> {
@@ -253,12 +218,5 @@ public class LexiconDetailsFragment extends BaseFragment {
                 layout.addView(imageView, 0);
             }
         }
-    }
-
-    private void constructSynonymWordsString(String synonymCode, StringBuilder synonymSB){
-        if(synonymSB.length() != 0) {
-            synonymSB.append(", ");
-        }
-        synonymSB.append(synonymCode);
     }
 }

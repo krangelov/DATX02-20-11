@@ -11,6 +11,8 @@ import org.grammaticalframework.pgf.MorphoAnalysis;
 import org.daison.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -25,9 +27,6 @@ public class LexiconViewModel extends AndroidViewModel {
 
     private static final String TAG = LexiconViewModel.class.getSimpleName();
 
-    //The functions that we are going to find in wordnet
-    private List<String> synonyms = new ArrayList<>();
-
     public LexiconViewModel(@NonNull Application application) {
         super(application);
         lexiconWords = new ArrayList<>();
@@ -35,7 +34,6 @@ public class LexiconViewModel extends AndroidViewModel {
 
     public String wordTranslator(String word) {
         lexiconWords.clear();
-        synonyms.clear();
 
         String form = null;
 
@@ -77,6 +75,13 @@ public class LexiconViewModel extends AndroidViewModel {
                                     if (synset != null) {
                                         lexiconWord.setGloss(synset.gloss);
                                     }
+
+                                    for (IdValue<SenseSchema.Lexeme> srow : t.atIndex(SenseSchema.lexemes_synset, row.getValue().synset_id)) {
+                                        String s_lin = gl.getTargetConcr().linearize(Expr.readExpr(srow.getValue().lex_fun));
+                                        if (!lin.equals(s_lin)) {
+                                            lexiconWord.addSynonymWord(s_lin);
+                                        }
+                                    }
                                 }
                             };
                         }
@@ -87,6 +92,26 @@ public class LexiconViewModel extends AndroidViewModel {
                 if (lexiconWords.size() > 0)
                     break;
             }
+
+            Collections.sort(lexiconWords, new Comparator<LexiconWord>() {
+                @Override
+                public int compare(LexiconWord lhs, LexiconWord rhs) {
+                    // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
+                    if(lhs.getStatus() != null && rhs.getStatus() == null)
+                        return -1;
+                    if(lhs.getStatus() == null && rhs.getStatus() != null)
+                        return 1;
+                    if(lhs.getStatus() == null && rhs.getStatus() == null)
+                        return 0;
+                    if (lhs.getStatus().equals(rhs.getStatus()))
+                        return 0;
+                    if(lhs.getStatus().equals(SenseSchema.Status.Checked))
+                        return -1;
+                    if(rhs.getStatus().equals(SenseSchema.Status.Checked))
+                        return 1;
+                    return 0;
+                }
+            });
         }
 
         return form;
@@ -95,12 +120,6 @@ public class LexiconViewModel extends AndroidViewModel {
     public List<LexiconWord> getLexiconWords() {
         return lexiconWords;
     }
-
-    public List<String> getSynonyms(){
-        return synonyms;
-    }
-
-    public void setLexiconWords(List<LexiconWord> lexiconWords){this.lexiconWords = lexiconWords;}
 
     public String inflect(String lemma) {
         Grammarlex gl = Grammarlex.get();
