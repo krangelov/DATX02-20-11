@@ -16,16 +16,18 @@ public class LexiconWord implements Serializable {
     private String tag;
     private Long synset_id;
     private SenseSchema.Status status;
+    private SenseSchema.ImageInfo[] images;
     private String synonymWords;
 
-    public LexiconWord(String lemma, String word, String gloss, String tag, Long synset_id, String synonymWords) {
+    public LexiconWord(String lemma, String tag, String word) {
         this.lemma = lemma;
         this.word = word;
-        this.gloss = gloss;
+        this.gloss = "";
         this.tag = tag;
-        this.synset_id = synset_id;
+        this.synset_id = null;
         this.status = null;
-        this.synonymWords = synonymWords;
+        this.images = null;
+        this.synonymWords = null;
     }
 
     public String getLemma() {return lemma; }
@@ -51,7 +53,7 @@ public class LexiconWord implements Serializable {
     public void setSynsetId(Long synset_id){
         this.synset_id = synset_id;
     }
-    
+
     public void setSynonymWords(String synonymWords){this.synonymWords = synonymWords;}
 
     public String getSynonymWords() {return synonymWords;}
@@ -62,6 +64,14 @@ public class LexiconWord implements Serializable {
 
     public void setStatus(SenseSchema.Status status) {
         this.status = status;
+    }
+
+    public SenseSchema.ImageInfo[] getImages() {
+        return images;
+    }
+
+    public void setImages(SenseSchema.ImageInfo[] images) {
+        this.images = images;
     }
 
     public CharSequence toDescription() {

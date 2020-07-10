@@ -61,6 +61,7 @@
         app:layout_constraintTop_toBottomOf="@+id/lexicon_details_appbar">
 
         <LinearLayout
+            android:id="@+id/mainView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -213,7 +214,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/ic_headerbg"
-                    android:elevation="3dp "
+                    android:elevation="3dp"
                     android:fontFamily="@font/cantata_one"
                     android:foreground="@drawable/ic_headerfg"
                     android:paddingLeft="16dp"

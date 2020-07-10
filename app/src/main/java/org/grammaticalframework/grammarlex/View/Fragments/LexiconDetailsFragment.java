@@ -1,17 +1,27 @@
 package org.grammaticalframework.grammarlex.View.Fragments;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 
+import android.util.Pair;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -29,11 +39,12 @@ import org.grammaticalframework.grammarlex.TTS;
 import org.grammaticalframework.grammarlex.ViewModel.LexiconViewModel;
 import org.grammaticalframework.grammarlex.ViewModel.LexiconWord;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.grammaticalframework.grammarlex.gf.GF;
-import org.grammaticalframework.pgf.Concr;
+import org.grammaticalframework.grammarlex.ViewModel.SenseSchema;
+import com.larvalabs.svgandroid.*;
 
 
 public class LexiconDetailsFragment extends BaseFragment {
@@ -52,6 +63,7 @@ public class LexiconDetailsFragment extends BaseFragment {
     private TextView synonymsHeader;
     private TextView inflectionsHeader;
     private TableRow synonymsRow;
+    private LinearLayout layout;
     private static final String TAG = LexiconDetailsFragment.class.getSimpleName();
 
     private TTS mTts;
@@ -75,6 +87,7 @@ public class LexiconDetailsFragment extends BaseFragment {
         synonymsHeader = fragmentView.findViewById(R.id.synonymsHeader);
         inflectionsHeader = fragmentView.findViewById(R.id.inflectionsHeader);
         synonymsRow = fragmentView.findViewById(R.id.synonymsRow);
+        layout = fragmentView.findViewById(R.id.mainView);
 
         navController = Navigation.findNavController(getActivity().findViewById(R.id.nav_host_fragment));
         backButton = fragmentView.findViewById(R.id.lexicon_details_back);
@@ -93,7 +106,6 @@ public class LexiconDetailsFragment extends BaseFragment {
 
         model = new ViewModelProvider(getActivity()).get(LexiconViewModel.class);
         return fragmentView;
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -112,7 +124,12 @@ public class LexiconDetailsFragment extends BaseFragment {
             translatedWord = word.getWord();
             lemma = word.getLemma();
             wordView.setText(translatedWord);
+
+            // show The Image in a ImageView
+            new DownloadImagesTask().execute(word.getImages());
+
             explanationTextView.setText(word.toDescription());
+
             loadSynonymWordsForOneWord(word);
 
             // Set colors for each header in this view
@@ -174,6 +191,68 @@ public class LexiconDetailsFragment extends BaseFragment {
                 foundSynonymList.clear();
             }
         });*/
+    }
+
+    private class DownloadImagesTask extends AsyncTask<SenseSchema.ImageInfo[], Void, Pair<Drawable,Uri>[]> {
+
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        protected Pair<Drawable,Uri>[] doInBackground(SenseSchema.ImageInfo[]... args) {
+            SenseSchema.ImageInfo[] imageInfos = args[0];
+            Pair<Drawable,Uri>[] drawables = new Pair[imageInfos.length];
+            for (int i = 0; i < imageInfos.length; i++) {
+                SenseSchema.ImageInfo imageInfo = imageInfos[i];
+                Uri uri = Uri.parse("https://en.wikipedia.org/wiki/"+imageInfo.page_url);
+
+                try {
+                    ArrayList<String> path = new ArrayList<String>();
+                    path.add("https://upload.wikimedia.org/wikipedia");
+                    for (String s : imageInfo.img_url.split("/"))
+                        path.add(s);
+                    String name = path.get(path.size()-1);
+                    if (name.endsWith(".svg")) {
+                        InputStream in = new java.net.URL(String.join("/",path)).openStream();
+                        SVG svg = SVGParser.getSVGFromInputStream(in);
+                        drawables[i] = new Pair<Drawable,Uri>(svg.createPictureDrawable(),uri);
+                    } else {
+                        path.add(2,"thumb");
+                        path.add("300px-"+name);
+                        InputStream in = new java.net.URL(String.join("/",path)).openStream();
+                        drawables[i] = new Pair<Drawable,Uri>(new BitmapDrawable(BitmapFactory.decodeStream(in)),uri);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return drawables;
+        }
+
+        protected void onPostExecute(Pair<Drawable,Uri>[] drawables) {
+            for (Pair<Drawable,Uri> pair : drawables) {
+                if (pair == null)
+                    continue;
+
+                final Uri uri = pair.second;
+
+                ImageView imageView = new ImageView(getContext());
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                params.setMargins(0, 20, 0, 20);
+                params.height = 300;
+                params.gravity = Gravity.CENTER;
+                imageView.setLayoutParams(params);
+                imageView.setImageDrawable(pair.first);
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
+                        startActivity(browserIntent);
+                    }
+                });
+                layout.addView(imageView, 0);
+            }
+        }
     }
 
     private void constructSynonymWordsString(String synonymCode, StringBuilder synonymSB){

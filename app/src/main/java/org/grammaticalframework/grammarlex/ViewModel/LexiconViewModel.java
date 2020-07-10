@@ -22,53 +22,59 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
 public class LexiconViewModel extends AndroidViewModel {
-    private List<String> translatedWords;
     private List<LexiconWord> lexiconWords;
 
     private static final String TAG = LexiconViewModel.class.getSimpleName();
     private GF gfClass;
 
     //The functions that we are going to find in wordnet
-    private List<String> functions = new ArrayList<>();
     private List<String> synonyms = new ArrayList<>();
 
     public LexiconViewModel(@NonNull Application application) {
         super(application);
-        translatedWords = new ArrayList<>();
         lexiconWords = new ArrayList<>();
         gfClass = new GF(Grammarlex.get());
     }
 
     public String wordTranslator(String word) {
         lexiconWords.clear();
-        translatedWords.clear();
-        functions.clear();
         synonyms.clear();
 
         String form = null;
 
         Grammarlex gl = Grammarlex.get();
+        List<String> functions = new ArrayList<>();
 
         if (word != null && word.length() > 0) {
             for (FullFormEntry entry : gl.getSourceConcr().lookupWordPrefix(word)) {
                 form = entry.getForm();
                 for (MorphoAnalysis an : entry.getAnalyses()) {
-                    if (!functions.contains(an.getLemma()) && gl.getTargetConcr().hasLinearization(an.getLemma())) {
-                        String s = gl.getTargetConcr().linearize(Expr.readExpr(an.getLemma()));
-                        functions.add(an.getLemma());
-                        translatedWords.add(s);
+                    String lemma = an.getLemma();
+                    if (!functions.contains(lemma) && gl.getTargetConcr().hasLinearization(lemma)) {
+                        functions.add(lemma);
+
+                        String cat = gl.getGrammar().getFunctionType(lemma).getCategory();
+
+                        Expr e_tag = Expr.readExpr("MkTag (Inflection" + cat + " " + lemma + ")");
+                        String tag = gl.getTargetConcr().linearize(e_tag);
+
+                        Expr e_lin = Expr.readExpr(lemma);
+                        String lin = gl.getTargetConcr().linearize(e_lin);
 
                         LexiconWord lexiconWord =
-                            new LexiconWord(an.getLemma(), s, "", speechTag(an.getLemma()), null, "");
+                            new LexiconWord(an.getLemma(), tag, lin);
 
                         try (ReadTransaction t = gl.getDatabase().newReadTransaction()) {
                             for (IdValue<SenseSchema.Lexeme> row : t.atIndex(SenseSchema.lexemes_fun, an.getLemma())) {
+                                lexiconWord.setImages(row.getValue().images);
+
                                 for (SenseSchema.LanguageStatus lang_status : row.getValue().status) {
                                     if (lang_status.language.equals(gl.getTargetLanguage().getConcrete())) {
                                         lexiconWord.setStatus(lang_status.status);
                                         break;
                                     }
                                 }
+
                                 if (row.getValue().synset_id != null) {
                                     SenseSchema.Synset synset = t.at(SenseSchema.synsets, row.getValue().synset_id.longValue());
                                     if (synset != null) {
@@ -99,17 +105,10 @@ public class LexiconViewModel extends AndroidViewModel {
 
     public void setLexiconWords(List<LexiconWord> lexiconWords){this.lexiconWords = lexiconWords;}
 
-    public String speechTag(String lemma){
-        Expr e = Expr.readExpr("MkTag (Inflection" + wordClass(lemma) + " " + lemma + ")");
-        return Grammarlex.get().getTargetConcr().linearize(e);
-    }
-
-    public String inflect(String lemma){
-        Expr e = Expr.readExpr("MkDocument (NoDefinition \"\") (Inflection" + wordClass(lemma) + " " + lemma + ") \"\"");
-        return Grammarlex.get().getTargetConcr().linearize(e);
-    }
-
-    public String wordClass(String lemma){
-        return Grammarlex.get().getGrammar().getFunctionType(lemma).getCategory();
+    public String inflect(String lemma) {
+        Grammarlex gl = Grammarlex.get();
+        String cat = gl.getGrammar().getFunctionType(lemma).getCategory();
+        Expr e = Expr.readExpr("MkDocument (NoDefinition \"\") (Inflection" + cat + " " + lemma + ") \"\"");
+        return gl.getTargetConcr().linearize(e);
     }
 }
