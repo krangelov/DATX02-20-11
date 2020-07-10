@@ -12,6 +12,11 @@ import android.view.inputmethod.InputConnection;
 
 import org.grammaticalframework.grammarlex.View.CompletionsView;
 import org.grammaticalframework.grammarlex.View.TranslatorKeyboardView;
+import org.grammaticalframework.pgf.FullFormEntry;
+
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 
 
 public class TranslatorInputMethodService extends InputMethodService 
@@ -448,15 +453,47 @@ public class TranslatorInputMethodService extends InputMethodService
     private void updateCandidates() {
         if (!mCompletionOn) {
             if (mComposingWord.length() > 1) {
-/*                mCompletions =
-                	mTranslator.lookupWordPrefix(mComposingWord.toString());
-                setSuggestions(mCompletions, true, true);*/
+                mCompletions =
+                	lookupWordPrefix(mComposingWord.toString());
+                setSuggestions(mCompletions, true, true);
             } else {
                 setSuggestions(null, false, false);
             }
         }
     }
-    
+
+    public CompletionInfo[] lookupWordPrefix(String prefix) {
+        PriorityQueue<FullFormEntry> queue =
+                new PriorityQueue<FullFormEntry>(500, new Comparator<FullFormEntry>() {
+                    @Override
+                    public int compare(FullFormEntry lhs, FullFormEntry rhs) {
+                        return Double.compare(lhs.getProb(), rhs.getProb());
+                    }
+                });
+        for (FullFormEntry entry : Grammarlex.get().getSourceConcr().lookupWordPrefix(prefix)) {
+            queue.add(entry);
+            if (queue.size() >= 1000)
+                break;
+        }
+
+        CompletionInfo[] completions = new CompletionInfo[Math.min(queue.size(), 5)+1];
+        completions[0] = new CompletionInfo(0, 0, prefix);
+        for (int i = 1; i < completions.length; i++) {
+            completions[i] = new CompletionInfo(i,i,queue.poll().getForm());
+        }
+
+        if (completions.length > 1) {
+            Arrays.sort(completions, 1, completions.length-1, new Comparator<CompletionInfo>() {
+                @Override
+                public int compare(CompletionInfo arg0, CompletionInfo arg1) {
+                    return ((String) arg0.getText()).compareTo((String) arg1.getText());
+                }
+            });
+        }
+
+        return completions;
+    }
+
     public void setSuggestions(CompletionInfo[] completions, boolean isCompletions,
             boolean typedWordValid) {
         if (completions != null && completions.length > 0) {
