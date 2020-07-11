@@ -181,7 +181,7 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (editable.length() > 0) {
+                if (editable.length() > 1) {
                     String form = lexiconVM.wordTranslator(editable.toString());
                     if (form == null)
                         search_word.setText(R.string.no_word_matches);

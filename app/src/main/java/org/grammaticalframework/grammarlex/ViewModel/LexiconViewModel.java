@@ -1,6 +1,7 @@
 package org.grammaticalframework.grammarlex.ViewModel;
 
 import android.app.Application;
+import android.view.inputmethod.CompletionInfo;
 
 import org.grammaticalframework.grammarlex.Language;
 import org.grammaticalframework.grammarlex.Grammarlex;
@@ -11,9 +12,13 @@ import org.grammaticalframework.pgf.MorphoAnalysis;
 import org.daison.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Set;
 
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
@@ -38,10 +43,33 @@ public class LexiconViewModel extends AndroidViewModel {
         String form = null;
 
         Grammarlex gl = Grammarlex.get();
-        List<String> functions = new ArrayList<>();
+        Set<String> functions = new HashSet<String>();
 
-        if (word != null && word.length() > 0) {
-            for (FullFormEntry entry : gl.getSourceConcr().lookupWordPrefix(word)) {
+        if (word != null && word.length() > 1) {
+            PriorityQueue<FullFormEntry> queue =
+                    new PriorityQueue<FullFormEntry>(500, new Comparator<FullFormEntry>() {
+                        @Override
+                        public int compare(FullFormEntry lhs, FullFormEntry rhs) {
+                            return Double.compare(lhs.getProb(), rhs.getProb());
+                        }
+                    });
+            for (FullFormEntry entry : Grammarlex.get().getSourceConcr().lookupWordPrefix(word)) {
+                boolean is_new = false;
+                for (MorphoAnalysis an : entry.getAnalyses()) {
+                    if (!functions.contains(an.getLemma())) {
+                        functions.add(an.getLemma());
+                        is_new = true;
+                    }
+                }
+                if (is_new) {
+                    queue.add(entry);
+                    if (queue.size() >= 1000)
+                        break;
+                }
+            }
+
+            for (FullFormEntry entry : queue) {
+                functions.clear();
                 form = entry.getForm();
                 for (MorphoAnalysis an : entry.getAnalyses()) {
                     String lemma = an.getLemma();
