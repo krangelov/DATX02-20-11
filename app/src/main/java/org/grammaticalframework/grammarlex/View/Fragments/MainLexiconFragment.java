@@ -49,7 +49,6 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
     private LexiconViewModel lexiconVM;
     private final BaseFragment lexiconDetailsFragment = FragmentFactory.createLexiconDetailsFragment();
     private EditText search_bar;
-    private TextView search_word;
     private AppBarLayout lexicon_toolbar;
     private Spinner fromLanguageSpinner;
     private Spinner toLanguageSpinner;
@@ -85,7 +84,6 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
         View fragmentView = inflater.inflate(R.layout.fragment_lexicon, container, false);
 
         search_bar = fragmentView.findViewById(R.id.lexicon_searchbar);
-        search_word = fragmentView.findViewById(R.id.lexicon_searchword);
         fromLanguageSpinner = fragmentView.findViewById(R.id.lexicon_from_language);
         toLanguageSpinner = fragmentView.findViewById(R.id.lexicon_to_language);
         lexicon_toolbar = fragmentView.findViewById(R.id.lexicon_appbar);
@@ -179,21 +177,29 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
 
             }
 
+            private boolean flag = false;
+            private String curr_form = null;
+
             @Override
             public void afterTextChanged(Editable editable) {
+                if (flag)
+                    return;
+
                 if (editable.length() > 1) {
-                    String form = lexiconVM.wordTranslator(editable.toString());
-                    if (form == null)
-                        search_word.setText(R.string.no_word_matches);
-                    else
-                        search_word.setText(form);
-                    search_clear_button.setVisibility(View.VISIBLE);
+                    String word = editable.toString();
+                    String form = lexiconVM.wordTranslator(word);
+                    if (form != null && !form.equals(curr_form)) {
+                        flag = true;
+                        search_bar.setText(form);
+                        search_bar.setSelection(word.length(),form.length());
+                        flag = false;
+                    }
+                    curr_form = form;
                 } else {
                     lexiconVM.wordTranslator("");
-                    search_word.setText("");
-                    search_clear_button.setVisibility(View.GONE);
                 }
                 wordAdapter.setLexiconWordList(lexiconVM.getLexiconWords());
+                search_clear_button.setVisibility(editable.length() > 0 ? View.VISIBLE : View.GONE);
             }
         });
 
