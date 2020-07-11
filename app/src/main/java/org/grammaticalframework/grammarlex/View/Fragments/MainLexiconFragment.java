@@ -2,6 +2,7 @@ package org.grammaticalframework.grammarlex.View.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -72,6 +73,7 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
     private float switchOffsetY;
     private boolean updateVM;
     private static final String TAG = MainLexiconFragment.class.getSimpleName();
+    private int defaultTextColor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,6 +104,7 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
 
         Bundle extras = search_bar.getInputExtras(true);
         extras.putBoolean("show_language_toggle", false);
+        defaultTextColor = search_bar.getCurrentTextColor();
 
         Grammarlex gl = Grammarlex.get();
 
@@ -188,11 +191,16 @@ public class MainLexiconFragment extends BaseFragment implements AppBarLayout.On
                 if (editable.length() > 1) {
                     String word = editable.toString();
                     String form = lexiconVM.wordTranslator(word);
-                    if (form != null && !form.equals(curr_form)) {
-                        flag = true;
-                        search_bar.setText(form);
-                        search_bar.setSelection(word.length(),form.length());
-                        flag = false;
+                    if (form != null) {
+                        if (!form.equals(curr_form)) {
+                            flag = true;
+                            search_bar.setText(form);
+                            search_bar.setSelection(word.length(), form.length());
+                            flag = false;
+                            search_bar.setTextColor(defaultTextColor);
+                        }
+                    } else {
+                        search_bar.setTextColor(Color.RED);
                     }
                     curr_form = form;
                 } else {
