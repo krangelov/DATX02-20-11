@@ -54,6 +54,11 @@ public class LexiconViewModel extends AndroidViewModel {
                         }
                     });
             for (FullFormEntry entry : Grammarlex.get().getSourceConcr().lookupWordPrefix(word)) {
+                if (entry.getForm().equals(word)) {
+                    queue.clear();
+                    queue.add(entry);
+                    break;
+                }
                 boolean is_new = false;
                 for (MorphoAnalysis an : entry.getAnalyses()) {
                     if (!functions.contains(an.getLemma())) {
@@ -113,7 +118,6 @@ public class LexiconViewModel extends AndroidViewModel {
                                 }
                             };
                         }
-
                         lexiconWords.add(lexiconWord);
                     }
                 }
