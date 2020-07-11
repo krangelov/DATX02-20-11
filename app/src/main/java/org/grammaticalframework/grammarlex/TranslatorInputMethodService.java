@@ -13,10 +13,13 @@ import android.view.inputmethod.InputConnection;
 import org.grammaticalframework.grammarlex.View.CompletionsView;
 import org.grammaticalframework.grammarlex.View.TranslatorKeyboardView;
 import org.grammaticalframework.pgf.FullFormEntry;
+import org.grammaticalframework.pgf.MorphoAnalysis;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.PriorityQueue;
+import java.util.Set;
 
 
 public class TranslatorInputMethodService extends InputMethodService 
@@ -470,10 +473,20 @@ public class TranslatorInputMethodService extends InputMethodService
                         return Double.compare(lhs.getProb(), rhs.getProb());
                     }
                 });
+        Set<String> functions = new HashSet<String>();
         for (FullFormEntry entry : Grammarlex.get().getSourceConcr().lookupWordPrefix(prefix)) {
-            queue.add(entry);
-            if (queue.size() >= 1000)
-                break;
+            boolean is_new = false;
+            for (MorphoAnalysis an : entry.getAnalyses()) {
+                if (!functions.contains(an.getLemma())) {
+                    functions.add(an.getLemma());
+                    is_new = true;
+                }
+            }
+            if (is_new) {
+                queue.add(entry);
+                if (queue.size() >= 1000)
+                    break;
+            }
         }
 
         CompletionInfo[] completions = new CompletionInfo[Math.min(queue.size(), 5)+1];
