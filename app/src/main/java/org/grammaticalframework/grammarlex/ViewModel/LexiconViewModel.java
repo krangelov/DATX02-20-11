@@ -96,12 +96,15 @@ public class LexiconViewModel extends AndroidViewModel {
                             for (IdValue<SenseSchema.Lexeme> row : t.atIndex(SenseSchema.lexemes_fun, an.getLemma())) {
                                 lexiconWord.setImages(row.getValue().images);
 
+                                SenseSchema.Status status = SenseSchema.Status.Checked;
                                 for (SenseSchema.LanguageStatus lang_status : row.getValue().status) {
-                                    if (lang_status.language.equals(gl.getTargetLanguage().getConcrete())) {
-                                        lexiconWord.setStatus(lang_status.status);
-                                        break;
+                                    if (lang_status.language.equals(gl.getSourceLanguage().getConcrete()) ||
+                                        lang_status.language.equals(gl.getTargetLanguage().getConcrete())) {
+                                        if (status.ordinal() > lang_status.status.ordinal())
+                                            status = lang_status.status;
                                     }
                                 }
+                                lexiconWord.setStatus(status);
 
                                 if (row.getValue().synset_id != null) {
                                     SenseSchema.Synset synset = t.at(SenseSchema.synsets, row.getValue().synset_id.longValue());
@@ -110,7 +113,20 @@ public class LexiconViewModel extends AndroidViewModel {
                                     }
 
                                     for (IdValue<SenseSchema.Lexeme> srow : t.atIndex(SenseSchema.lexemes_synset, row.getValue().synset_id)) {
-                                        String s_lin = gl.getTargetConcr().linearize(Expr.readExpr(srow.getValue().lex_fun));
+                                        String s_fun = srow.getValue().lex_fun;
+                                        if (!gl.getTargetConcr().hasLinearization(s_fun))
+                                            continue;
+                                        boolean checked = true;
+                                        for (SenseSchema.LanguageStatus lang_status : row.getValue().status) {
+                                            if ((lang_status.language.equals(gl.getTargetLanguage().getConcrete()) ||
+                                                 lang_status.language.equals(gl.getSourceLanguage().getConcrete())) &&
+                                                lang_status.status != SenseSchema.Status.Checked) {
+                                                checked = false;
+                                            }
+                                        }
+                                        if (!checked)
+                                            continue;
+                                        String s_lin = gl.getTargetConcr().linearize(Expr.readExpr(s_fun));
                                         if (!lin.equals(s_lin)) {
                                             lexiconWord.addSynonymWord(s_lin);
                                         }
