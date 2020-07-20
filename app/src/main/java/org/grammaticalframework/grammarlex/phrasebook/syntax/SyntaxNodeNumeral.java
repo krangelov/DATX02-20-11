@@ -31,12 +31,12 @@ public class SyntaxNodeNumeral extends SyntaxNode {
         String syntax = "";
         if(nbr < 1000000 && nbr > 0) {
             if (nbr <=999) {
-                syntax = "(num (pot2as3 " + subs1000(nbr) + "))";
+                syntax = "(num (pot3as4 (pot2as3 " + subs1000(nbr) + ")))";
             } else if(nbr % 1000 == 0) {
-                syntax = "(num (pot3 " + subs1000(nbr/1000) + "))";
+                syntax = "(num (pot3as4 (pot3 " + subs1000(nbr/1000) + ")))";
             } else if(nbr > 1000 && nbr%1000 != 0) {
-                syntax = "(num (pot3plus " + subs1000(nbr/1000) + " " +
-                        subs1000(nbr%1000) + "))";
+                syntax = "(num (pot3as4 (pot3plus " + subs1000(nbr/1000) + " " +
+                        subs1000(nbr%1000) + ")))";
             }
         } else {
             throw new IllegalArgumentException("Input must be between 1 and 999999");

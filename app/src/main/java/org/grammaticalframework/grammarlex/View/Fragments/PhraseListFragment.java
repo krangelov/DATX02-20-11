@@ -10,12 +10,16 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
+
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import org.grammaticalframework.grammarlex.Grammarlex;
 import org.grammaticalframework.grammarlex.R;
 import org.grammaticalframework.grammarlex.phrasebook.Model;
 import org.grammaticalframework.grammarlex.phrasebook.syntax.SyntaxTree;
+import org.grammaticalframework.pgf.Expr;
 
 
 /**
@@ -62,7 +66,15 @@ public class PhraseListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_phrase_list, container, false);
 
 		final List<SyntaxTree> sentences = (id == null) ? model.getSentences() : model.getGroup(id);
-        ArrayAdapter<SyntaxTree> adapter = new ArrayAdapter<SyntaxTree>(getActivity(), R.layout.phrase_list_item, sentences);
+        ArrayAdapter<SyntaxTree> adapter = new ArrayAdapter<SyntaxTree>(getActivity(), R.layout.phrase_list_item, sentences) {
+            public View	getView(int position, View convertView, ViewGroup parent) {
+                Expr e = Expr.readExpr(sentences.get(position).getDesc());
+                String label = Grammarlex.get().getSourceConcr().linearize(e);
+                TextView view = (TextView) super.getView(position, convertView, parent);
+                view.setText(label);
+                return view;
+            }
+        };
 
         final ListView phraseListView = (ListView) view.findViewById(R.id.phrase_listView);
         phraseListView.setAdapter(adapter);
@@ -73,6 +85,7 @@ public class PhraseListFragment extends Fragment {
                 SyntaxTree phrase = sentences.get(position);
                 Bundle bundle = new Bundle();
                 bundle.putInt("position", position);
+                bundle.putString("title", (String) ((TextView) view).getText());
                 bundle.putString("id", id);
                 NavHostFragment.findNavController(PhraseListFragment.this).navigate(R.id.action_phrasebookFragment_to_translatorFragment, bundle);
             }

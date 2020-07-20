@@ -14,6 +14,7 @@ import java.util.List;
 public class LexiconWord implements Serializable {
     private String lemma;
     private String word;
+    private String form;
     private String gloss;
     private String tag;
     private Long synset_id;
@@ -21,9 +22,10 @@ public class LexiconWord implements Serializable {
     private SenseSchema.ImageInfo[] images;
     private List<String> synonymWords;
 
-    public LexiconWord(String lemma, String tag, String word) {
+    public LexiconWord(String lemma, String tag, String word, String form) {
         this.lemma = lemma;
         this.word = word;
+        this.form = form;
         this.gloss = "";
         this.tag = tag;
         this.synset_id = null;
@@ -80,8 +82,10 @@ public class LexiconWord implements Serializable {
 
     public CharSequence toDescription() {
         SpannableStringBuilder builder = new SpannableStringBuilder();
-        builder.append(tag);
-        builder.append(". ");
+        if (tag != null) {
+            builder.append(tag);
+            builder.append(". ");
+        }
         builder.append(word);
         builder.setSpan(
                 new StyleSpan(Typeface.BOLD),
@@ -97,5 +101,11 @@ public class LexiconWord implements Serializable {
         }
         builder.append(gloss);
         return (CharSequence) builder;
+    }
+
+    public String toString() {
+        if (word == null || form == null)
+            return null;
+        return word + " - " + form;
     }
 }

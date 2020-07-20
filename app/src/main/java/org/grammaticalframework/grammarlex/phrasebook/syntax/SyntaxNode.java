@@ -25,9 +25,4 @@ public class SyntaxNode implements Serializable {
 	public SyntaxNode unlink() {
 		return this;
 	}
-	
-	@Override
-	public String toString() {
-		return desc;
-	}
 }

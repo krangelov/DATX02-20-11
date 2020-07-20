@@ -151,12 +151,17 @@ public class Model {
 		if (node.getNodeName().equals("function")) {
 			String function = attributes.getNamedItem("name").getNodeValue();
 			SyntaxNode[] arguments = constructSyntaxNodeList(node, ids, calls);
+			if (desc.isEmpty())
+				desc = function;
 			return new SyntaxNodeFunction(desc, function, arguments);
 		} else if (node.getNodeName().equals("numeral")) {
 			return new SyntaxNodeNumeral(desc, 1, 100);
 		} else if (node.getNodeName().equals("option")) {
 			SyntaxNode[] options = constructSyntaxNodeList(node, ids, calls);
-			return new SyntaxNodeOption(desc, options);
+			return new SyntaxNodeOption(desc, options, false);
+		} else if (node.getNodeName().equals("lexicon")) {
+			SyntaxNode[] options = constructSyntaxNodeList(node, ids, calls);
+			return new SyntaxNodeOption(desc, options, true);
 		} else if (node.getNodeName().equals("boolean")) {
 			SyntaxNode[] options = constructSyntaxNodeList(node, ids, calls);
 			return new SyntaxNodeBoolean(desc, options);

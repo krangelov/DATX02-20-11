@@ -3,7 +3,6 @@ package org.grammaticalframework.grammarlex.ViewModel;
 import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
 
 import org.grammaticalframework.grammarlex.Grammarlex;
 import org.grammaticalframework.pgf.Bracket;
@@ -50,7 +49,8 @@ public class FillTheGapViewModel extends AndroidViewModel {
         expression = Expr.readExpr(ftge.getAbstractSyntaxTree());
         linearizedSentence = mGrammarlex.getTargetConcr().linearize(expression);
         Object[] bs = mGrammarlex.getTargetConcr().bracketedLinearize(expression);
-        findWordToRedact(bs[0]);
+        findWordToRedact(bs[0]);import androidx.lifecycle.LiveData;
+
         setRedactedWord();
     }*/
 

@@ -90,7 +90,7 @@ public class LexiconViewModel extends AndroidViewModel {
                         String lin = gl.getTargetConcr().linearize(e_lin);
 
                         LexiconWord lexiconWord =
-                            new LexiconWord(an.getLemma(), tag, lin);
+                            new LexiconWord(an.getLemma(), tag, lin, form);
 
                         try (ReadTransaction t = gl.getDatabase().newReadTransaction()) {
                             for (IdValue<SenseSchema.Lexeme> row : t.atIndex(SenseSchema.lexemes_fun, an.getLemma())) {
